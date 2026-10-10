@@ -6,13 +6,15 @@ from difflib import SequenceMatcher
 from urllib.parse import urlparse
 import requests
 from bs4 import BeautifulSoup
+import xml.etree.ElementTree as ET
+from email.utils import parsedate_to_datetime
 
 ROOT = Path(__file__).resolve().parent
 CONFIG = json.loads((ROOT/'config.json').read_text(encoding='utf-8'))
 ARTICLES_PATH = ROOT/'articles.json'
 STATUS_PATH = ROOT/'status.json'
 API = 'https://api.gdeltproject.org/api/v2/doc/doc'
-UA = 'STT-World-Watch/1.0 (+GitHub Actions; public-news-monitor)'
+UA = 'Mozilla/5.0 (compatible; STT-World-Watch/1.1; +https://github.com/Jahumaker/stt-world-watch)'
 
 COUNTRY_MAP = {
  'Sweden':('Ruotsi','SE'),'Norway':('Norja','NO'),'Denmark':('Tanska','DK'),'Estonia':('Viro','EE'),
@@ -109,29 +111,125 @@ def summary_fi(title, publisher, agency, typ):
     if agency: return f'{publisher} julkaisi {agency}-aineistoa STT:n tilanteesta. Sovellus ryhmittelee saman uutistoimistotekstin muut julkaisut samaan nippuun.'
     return f'{publisher} julkaisi STT:n tilanteeseen liittyvän jutun. Automaattinen seuranta on tunnistanut sen STT:tä itseään käsitteleväksi osumaksi.'
 
+def _gdelt_params(query, fmt='json'):
+    return {
+        'query': query,
+        'mode': 'artlist',
+        'format': fmt,
+        'maxrecords': 75,
+        'timespan': CONFIG.get('lookback', '3d'),
+        'sort': 'datedesc'
+    }
+
+def _rss_to_articles(xml_text):
+    """Convert GDELT's ArticleList RSS output to the same minimal shape as JSON."""
+    root = ET.fromstring(xml_text)
+    out = []
+    for item in root.findall('.//item'):
+        title = (item.findtext('title') or '').strip()
+        url = (item.findtext('link') or '').strip()
+        if not title or not url:
+            continue
+        pub = (item.findtext('pubDate') or '').strip()
+        seen = None
+        if pub:
+            try:
+                seen = parsedate_to_datetime(pub).astimezone(timezone.utc).isoformat(timespec='seconds')
+            except Exception:
+                seen = None
+        out.append({
+            'url': url,
+            'title': title,
+            'domain': domain_of(url),
+            'sourcecountry': None,
+            'seendate': seen or nowiso()
+        })
+    return out
+
 def search_gdelt(query):
-    # GDELT rate-limits its public API during busy periods. Keep the tracker
-    # deliberately gentle: at most a few requests, a smaller result set, and
-    # exponential backoff on HTTP 429.
-    params={'query':query,'mode':'artlist','format':'json','maxrecords':100,'timespan':CONFIG.get('lookback','3d'),'sort':'datedesc'}
-    session=requests.Session()
-    session.headers.update({'User-Agent':UA})
-    last_error=None
-    for attempt in range(1,4):
-        r=session.get(API,params=params,timeout=45)
-        if r.status_code != 429:
-            r.raise_for_status()
-            return r.json().get('articles',[])
-        retry_after=r.headers.get('Retry-After')
+    """
+    Search GDELT gently.
+
+    Primary path: JSON.
+    If GDELT returns HTTP 429, HTML, an empty body or otherwise invalid JSON,
+    retry with backoff. If JSON remains unavailable, fall back to GDELT's RSS
+    ArticleList output, which contains the original article URLs and titles.
+    """
+    session = requests.Session()
+    session.headers.update({
+        'User-Agent': UA,
+        'Accept': 'application/json,text/plain,*/*'
+    })
+
+    last_error = None
+
+    # JSON first.
+    for attempt in range(1, 4):
         try:
-            wait=int(retry_after) if retry_after else 20*(2**(attempt-1))
-        except ValueError:
-            wait=20*(2**(attempt-1))
-        wait=min(max(wait,10),90)
-        last_error=f'GDELT rate limit (HTTP 429), retry {attempt}/3 after {wait}s'
-        print(last_error)
-        time.sleep(wait)
-    raise RuntimeError(last_error or 'GDELT request failed')
+            r = session.get(API, params=_gdelt_params(query, 'json'), timeout=45)
+
+            if r.status_code == 429:
+                retry_after = r.headers.get('Retry-After')
+                try:
+                    wait = int(retry_after) if retry_after else 15 * (2 ** (attempt - 1))
+                except ValueError:
+                    wait = 15 * (2 ** (attempt - 1))
+                wait = min(max(wait, 10), 60)
+                last_error = f'HTTP 429, retry {attempt}/3 after {wait}s'
+                print(f'GDELT JSON: {last_error}')
+                time.sleep(wait)
+                continue
+
+            r.raise_for_status()
+            body = r.text.lstrip()
+            ctype = (r.headers.get('content-type') or '').lower()
+
+            # GDELT occasionally returns a 200 response with HTML or an empty
+            # body during load. Do not hand that to json(), because it produces
+            # the unhelpful "Expecting value" exception.
+            if not body:
+                raise RuntimeError('empty response body')
+            if body.startswith('<!DOCTYPE') or body.startswith('<html') or 'text/html' in ctype:
+                raise RuntimeError('HTML returned instead of JSON')
+
+            data = r.json()
+            return data.get('articles', [])
+
+        except Exception as e:
+            last_error = str(e)
+            if attempt < 3:
+                wait = 8 * attempt
+                print(f'GDELT JSON unavailable ({last_error}); retrying in {wait}s')
+                time.sleep(wait)
+
+    # RSS fallback. GDELT documents RSS as an ArticleList output format.
+    print(f'GDELT JSON unavailable after retries ({last_error}); trying RSS fallback.')
+    rss_headers = {
+        'User-Agent': UA,
+        'Accept': 'application/rss+xml,application/xml,text/xml,*/*'
+    }
+    for attempt in range(1, 3):
+        try:
+            r = session.get(API, params=_gdelt_params(query, 'rss'),
+                            headers=rss_headers, timeout=45)
+            if r.status_code == 429:
+                wait = 20 * attempt
+                print(f'GDELT RSS rate-limited; retrying in {wait}s')
+                time.sleep(wait)
+                continue
+            r.raise_for_status()
+            body = r.text.lstrip()
+            if not body or body.startswith('<!DOCTYPE html') or body.startswith('<html'):
+                raise RuntimeError('HTML/empty response returned instead of RSS')
+            articles = _rss_to_articles(r.text)
+            print(f'GDELT RSS fallback returned {len(articles)} articles.')
+            return articles
+        except Exception as e:
+            last_error = str(e)
+            if attempt < 2:
+                time.sleep(10)
+
+    raise RuntimeError(f'GDELT JSON and RSS both unavailable: {last_error}')
 
 
 def gdelt_queries():
