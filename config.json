@@ -1,0 +1,64 @@
+{
+  "app_name": "STT World Watch",
+  "refresh_minutes": 60,
+  "lookback": "3d",
+  "queries": [
+    "\"Finnish news agency STT\"",
+    "\"Finnish News Agency\" STT",
+    "\"finska nyhetsbyrån\" STT",
+    "\"finsk nyhetsbyrå\" STT",
+    "\"Soome uudisteagentuur\" STT",
+    "\"finnische Nachrichtenagentur\" STT",
+    "\"agence de presse finlandaise\" STT",
+    "\"agencia de noticias finlandesa\" STT",
+    "\"agenzia di stampa finlandese\" STT",
+    "\"fińska agencja prasowa\" STT",
+    "\"финское информационное агентство\" STT",
+    "STT nyhetsbyrå avveckling",
+    "STT news agency closure",
+    "STT news agency restructuring"
+  ],
+  "exclude_domains": [
+    "sttinfo.fi",
+    "stt.fi",
+    "yle.fi",
+    "hs.fi",
+    "is.fi",
+    "iltalehti.fi",
+    "mtvuutiset.fi",
+    "helsinkitimes.fi",
+    "verkkouutiset.fi"
+  ],
+  "agency_domains": {
+    "reuters.com": "Reuters",
+    "apnews.com": "AP",
+    "afp.com": "AFP",
+    "tt.se": "TT",
+    "ntb.no": "NTB",
+    "ritzau.dk": "Ritzau",
+    "dpa.com": "dpa",
+    "ansa.it": "ANSA",
+    "efe.com": "EFE",
+    "apa.at": "APA",
+    "belga.press": "Belga",
+    "anp.nl": "ANP",
+    "keystone-sda.ch": "Keystone-SDA"
+  },
+  "high_priority_domains": [
+    "reuters.com", "apnews.com", "afp.com", "bbc.com", "bbc.co.uk",
+    "theguardian.com", "ft.com", "nytimes.com", "washingtonpost.com",
+    "spiegel.de", "lemonde.fr", "elpais.com", "corriere.it"
+  ],
+  "major_domains": [
+    "svd.se", "aftonbladet.se", "expressen.se", "dn.se", "gp.se", "tv4.se",
+    "nrk.no", "vg.no", "aftenposten.no", "abcnyheter.no",
+    "dr.dk", "tv2.dk", "politiken.dk", "berlingske.dk",
+    "err.ee", "postimees.ee"
+  ],
+  "trade_domains": [
+    "journalisten.no", "m24.no", "medier24.no", "dagensmedia.se"
+  ],
+  "aggregator_domains": [
+    "news.inbox.lv", "ukr.net", "msn.com", "news.google.com"
+  ]
+}
