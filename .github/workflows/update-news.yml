@@ -1,0 +1,38 @@
+name: Update STT World Watch
+
+on:
+  schedule:
+    - cron: '17 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: stt-world-watch-update
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Search foreign coverage
+        run: python update_news.py
+      - name: Commit changes only when results changed
+        run: |
+          git config user.name "stt-world-watch-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add articles.json status.json
+          if git diff --cached --quiet; then
+            echo "No data changes — nothing to commit."
+          else
+            git commit -m "Update STT World Watch data"
+            git push
+          fi
