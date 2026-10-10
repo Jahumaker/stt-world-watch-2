@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import json, re, hashlib, html, os, sys, time
+import json, re, hashlib, html, os, sys, time, random
 from pathlib import Path
 from datetime import datetime, timezone, timedelta
 from difflib import SequenceMatcher
@@ -110,10 +110,43 @@ def summary_fi(title, publisher, agency, typ):
     return f'{publisher} julkaisi STT:n tilanteeseen liittyvän jutun. Automaattinen seuranta on tunnistanut sen STT:tä itseään käsitteleväksi osumaksi.'
 
 def search_gdelt(query):
-    params={'query':query,'mode':'artlist','format':'json','maxrecords':250,'timespan':CONFIG.get('lookback','3d'),'sort':'datedesc'}
-    r=requests.get(API,params=params,headers={'User-Agent':UA},timeout=30)
-    r.raise_for_status()
-    return r.json().get('articles',[])
+    # GDELT rate-limits its public API during busy periods. Keep the tracker
+    # deliberately gentle: at most a few requests, a smaller result set, and
+    # exponential backoff on HTTP 429.
+    params={'query':query,'mode':'artlist','format':'json','maxrecords':100,'timespan':CONFIG.get('lookback','3d'),'sort':'datedesc'}
+    session=requests.Session()
+    session.headers.update({'User-Agent':UA})
+    last_error=None
+    for attempt in range(1,4):
+        r=session.get(API,params=params,timeout=45)
+        if r.status_code != 429:
+            r.raise_for_status()
+            return r.json().get('articles',[])
+        retry_after=r.headers.get('Retry-After')
+        try:
+            wait=int(retry_after) if retry_after else 20*(2**(attempt-1))
+        except ValueError:
+            wait=20*(2**(attempt-1))
+        wait=min(max(wait,10),90)
+        last_error=f'GDELT rate limit (HTTP 429), retry {attempt}/3 after {wait}s'
+        print(last_error)
+        time.sleep(wait)
+    raise RuntimeError(last_error or 'GDELT request failed')
+
+
+def gdelt_queries():
+    # One broad multilingual request replaces the old 14 rapid-fire requests.
+    # If it yields no candidates, a single English backstop query is allowed.
+    primary = (
+        'STT ("Finnish news agency" OR "Finnish News Agency" OR '
+        '"finska nyhetsbyrån" OR "finsk nyhetsbyrå" OR '
+        '"Soome uudisteagentuur" OR "finnische Nachrichtenagentur" OR '
+        '"agence de presse finlandaise" OR "agencia de noticias finlandesa" OR '
+        '"agenzia di stampa finlandese" OR "fińska agencja prasowa" OR '
+        '"финское информационное агентство")'
+    )
+    fallback = 'STT "news agency" (closure OR crisis OR restructuring OR shutdown OR losses)'
+    return primary, fallback
 
 def title_similarity(a,b): return SequenceMatcher(None,normalize_title(a),normalize_title(b)).ratio()
 
@@ -162,16 +195,36 @@ def main():
     by_url={x['url']:x for x in old}
     candidates={}
     errors=[]
-    for q in CONFIG['queries']:
+    primary, fallback = gdelt_queries()
+
+    # Small jitter prevents thousands of scheduled jobs around the world from
+    # hitting the public endpoint on exactly the same second.
+    time.sleep(random.uniform(2,8))
+
+    try:
+        results=search_gdelt(primary)
+        for x in results:
+            url=x.get('url'); title=(x.get('title') or '').strip()
+            if not url or not title: continue
+            domain=x.get('domain') or domain_of(url)
+            if excluded(domain): continue
+            candidates[url]=(x,title,domain)
+    except Exception as e:
+        errors.append(f'Primary GDELT search: {e}')
+
+    # Only make a second GDELT request when the first one succeeded but returned
+    # no usable candidates. This keeps normal hourly load to one API request.
+    if not candidates and not errors:
+        time.sleep(15)
         try:
-            for x in search_gdelt(q):
+            for x in search_gdelt(fallback):
                 url=x.get('url'); title=(x.get('title') or '').strip()
                 if not url or not title: continue
                 domain=x.get('domain') or domain_of(url)
                 if excluded(domain): continue
                 candidates[url]=(x,title,domain)
-            time.sleep(.5)
-        except Exception as e: errors.append(f'{q}: {e}')
+        except Exception as e:
+            errors.append(f'Fallback GDELT search: {e}')
     new=[]
     for url,(x,title,domain) in candidates.items():
         if url in by_url: continue
