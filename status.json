@@ -1,13 +1,16 @@
 {
-  "last_data_update": "2026-10-11T12:03:19+00:00",
-  "last_success": "2026-10-11T12:03:19+00:00",
+  "last_data_update": "2026-10-11T12:13:47+00:00",
+  "last_success": "2026-10-11T12:13:47+00:00",
   "new_count": 1,
-  "source_count": 219,
+  "source_count": 209,
   "error": null,
   "agent_mode": "deep",
-  "agent_summary_fi": "Seurannassa löytyi kaksi historiasta puuttuvaa havaintoa: ANP:n entisen toimitusjohtajan Guido van Nispenin oma STT-analyysi sekä Helsinki Timesin englanninkielinen uutinen. Van Nispen tuo keskusteluun myös poikkeavan näkökulman: yhteisen uutisinfrastruktuurin menettäminen voi hänen mukaansa lisätä julkaisijoiden uutisagendojen eriytymistä. ([linkedin.com](https://www.linkedin.com/posts/hans-vandendriessche-79b8862_journalism-media-ai-activity-7512047898424156160-bGhm))",
-  "agent_search_notes_fi": "Hakuja tehtiin englanniksi, ruotsiksi, norjaksi, saksaksi, ranskaksi, espanjaksi, portugaliksi ja Balkanin kielillä. Mukana olivat STT-haut, temaattiset infrastruktuuri- ja disinformaatiohaut sekä LinkedIn-, X- ja Bluesky-haut. EU-instituutioihin ja lehdistönvapausjärjestöihin kohdistetut haut eivät tuottaneet palautettavaa uutta kannanottoa. Tunnettuja kannanottoja ei palautettu uudelleen ilman olennaista metatietoparannusta. Someindeksoinnin ja sivujen avautumisen rajoitukset estävät kattavuuden takaamisen. Molemmille palautetuille havainnoille löytyi todellinen julkaisijan verkkonäkymä, mutta pysyvät yksittäisjulkaisujen osoitteet jäivät vahvistamatta.",
-  "updated_count": 0,
-  "cleanup_merged": 5,
-  "baseline_restored": 5
+  "agent_summary_fi": "Sweepissä löytyi kaksi historiasta puuttuvaa englanninkielistä julkaisua sekä yksi tunnetun norjalaisen uutisen tekijä- ja lähdetietoja korjaava havainto. Uusia merkittäviä kansainvälisiä kannanottajia tai 11.10.2026 julkaistuiksi varmennettuja osumia ei löytynyt. Uudet julkaisut käsittelevät sulkemisuhkaa, eivät vahvistettua lopettamispäätöstä. ([helsinkitimes.fi](https://www.helsinkitimes.fi/business/29329-finnish-news-agency-stt-faces-possible-closure-in-march.html?utm_source=openai))",
+  "agent_search_notes_fi": "Hakuja tehtiin englanniksi, ruotsiksi, norjaksi, tanskaksi, ranskaksi, saksaksi, espanjaksi, portugaliksi, italiaksi sekä bosnian/serbian/kroatian hakusanoilla. Mukana olivat STT:n nimellä tehdyt haut, kansallisen uutistoimiston rahoitusta ja katoamista koskevat temaattiset haut sekä alkuperäisjournalismia, mediapluralismia, kriisinkestävyyttä ja disinformaatiota käsittelevät haut. Tarkistettiin myös LinkedInin julkisia julkaisu- ja organisaationäkymiä sekä haettiin X- ja Bluesky-osumia. Tunnettuja kannanottoja ei palautettu uudelleen ilman olennaista rikastusta. Temaattisista hauista ei löytynyt uutta nimeämätöntä kannanottoa, jonka yhteys juuri STT-tapaukseen olisi riittävästi osoitettavissa. Helsinki Timesin erillinen avaaminen epäonnistui, mutta hakupalvelu palautti artikkelin päivätyn kokotekstin. Somepalvelujen indeksointi ja suhteelliset aikamerkinnät rajoittavat seurannan kattavuutta; tulos ei osoita, ettei uusia julkaisuja olisi olemassa.",
+  "updated_count": 1,
+  "cleanup_merged": 4,
+  "baseline_restored": 9,
+  "baseline_coverage": 43,
+  "baseline_missing_rows": [],
+  "out_of_scope_removed": 8
 }
