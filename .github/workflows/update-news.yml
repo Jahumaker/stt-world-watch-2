@@ -2,8 +2,20 @@ name: Update STT World Watch
 
 on:
   schedule:
-    - cron: '17 * * * *'
+    # Kevyt semanttinen seuranta 3 tunnin välein.
+    - cron: '17 */3 * * *'
+    # Kerran päivässä perusteellisempi sweep.
+    - cron: '47 4 * * *'
   workflow_dispatch:
+    inputs:
+      mode:
+        description: 'Hakutapa'
+        required: true
+        default: 'deep'
+        type: choice
+        options:
+          - deep
+          - monitor
 
 permissions:
   contents: write
@@ -14,24 +26,46 @@ concurrency:
 
 jobs:
   update:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    env:
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-python@v6
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
         with:
           python-version: '3.12'
           cache: 'pip'
+
       - name: Install dependencies
         run: pip install -r requirements.txt
-      - name: Search foreign coverage
-        run: python update_news.py
-      - name: Commit changes only when results changed
+
+      - name: Choose agent mode
+        id: mode
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "mode=${{ inputs.mode }}" >> "$GITHUB_OUTPUT"
+          elif [ "${{ github.event.schedule }}" = "47 4 * * *" ]; then
+            echo "mode=deep" >> "$GITHUB_OUTPUT"
+          else
+            echo "mode=monitor" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Run semantic web-search agent
+        run: python update_news.py --mode "${{ steps.mode.outputs.mode }}"
+
+      - name: Commit only if data changed
+        shell: bash
         run: |
           git config user.name "stt-world-watch-bot"
           git config user.email "actions@users.noreply.github.com"
           git add articles.json status.json
           if git diff --cached --quiet; then
-            echo "No data changes — nothing to commit."
+            echo "No new persistent data — nothing to commit."
           else
             git commit -m "Update STT World Watch data"
             git push
