@@ -676,58 +676,92 @@ def merge_observation(existing, raw, exact_source=True, note=None):
 
 def reconcile_existing_history(articles):
     """
-    One-time-safe cleanup for duplicates created by the first agent run.
-    - same URL is only a duplicate when the actor/organisation is also the same;
-      one NMC page may legitimately contain separate NMC, Giboi, Guzenina observations.
-    - old unverified seed actor + newly found direct agent post -> enrich seed.
-    - for the initial migration only, same seed actor and an agent item first seen
-      by 12 Oct 2026 are merged even when the seed link was already indirect/shared.
-      Future genuinely new posts by that person are not affected.
+    Idempotent history cleanup.
+
+    Critical rule: the 43 authoritative baseline rows are anchors. They always
+    survive cleanup. Agent-discovered duplicates may enrich those rows, but a
+    baseline row is never merged into (and replaced by) an agent row.
+
+    This function is intentionally order-independent: baseline rows are handled
+    first, then all other observations.
     """
-    kept = []
-    merged_count = 0
+    baseline = [
+        a for a in articles
+        if a.get("seed") and a.get("source_row") in BASELINE_SOURCE_ROWS
+    ]
+    others = [
+        a for a in articles
+        if not (a.get("seed") and a.get("source_row") in BASELINE_SOURCE_ROWS)
+    ]
+
+    # Keep every authoritative report row exactly once, by source_row.
+    seeds_by_row = {}
+    for item in baseline:
+        row = item.get("source_row")
+        # Prefer the canonical embedded-baseline id if duplicates somehow exist.
+        current = seeds_by_row.get(row)
+        if current is None:
+            seeds_by_row[row] = item
+        else:
+            canonical = next((s for s in BASELINE_HISTORY if s.get("source_row") == row), None)
+            if canonical and item.get("id") == canonical.get("id"):
+                seeds_by_row[row] = item
+
+    kept = [seeds_by_row[r] for r in sorted(seeds_by_row)]
+    merged_count = max(0, len(baseline) - len(kept))
     migration_cutoff = datetime(2026, 10, 12, tzinfo=timezone.utc)
 
-    for item in articles:
+    for item in others:
         target = None
+
+        # 1) Prefer a matching baseline anchor.
         for existing in kept:
-            # The report contains 43 intentional observation rows. Never collapse
-            # one authoritative baseline row into another, even when several are
-            # syndications of the same agency copy.
-            if existing.get("seed") and item.get("seed"):
+            if not (existing.get("seed") and existing.get("source_row") in BASELINE_SOURCE_ROWS):
                 continue
 
             if same_observation(existing, item):
                 target = existing
                 break
 
-            # Cleanup of the specific first agent pass: same actor, seed vs agent,
-            # discovered before migration cutoff. This catches e.g. Giboi while
-            # leaving future separate posts alone.
-            if existing.get("seed") and not item.get("seed"):
-                ek, ik = actor_key(existing), actor_key(item)
-                if ek and ik and ek == ik:
-                    try:
-                        seen = datetime.fromisoformat((item.get("first_seen") or "").replace("Z", "+00:00"))
-                    except Exception:
-                        seen = None
-                    if seen and seen <= migration_cutoff:
+            # One-time migration cleanup for early agent rows representing an
+            # already-known person/organisation observation.
+            ek, ik = actor_key(existing), actor_key(item)
+            if ek and ik and ek == ik:
+                try:
+                    seen = datetime.fromisoformat(
+                        (item.get("first_seen") or "").replace("Z", "+00:00")
+                    )
+                except Exception:
+                    seen = None
+                if seen and seen <= migration_cutoff:
+                    # Be conservative: only collapse this early row if the date
+                    # is in the same event window or the old seed link was weak.
+                    days = date_distance_days(existing, item)
+                    if is_weak_or_indirect_link(existing) or days is None or days <= 4.5:
                         target = existing
                         break
 
-        if target:
+        # 2) Otherwise deduplicate against another non-baseline observation.
+        if target is None:
+            for existing in kept:
+                if existing.get("seed") and existing.get("source_row") in BASELINE_SOURCE_ROWS:
+                    continue
+                if same_observation(existing, item):
+                    target = existing
+                    break
+
+        if target is not None:
             merge_observation(
                 target,
                 item,
                 exact_source=bool(item.get("link_verified", True)),
-                note="Ensimmäisen agenttiajon semanttinen duplikaatti yhdistettiin aiempaan havaintoon."
+                note="Semanttinen duplikaatti yhdistettiin aiempaan havaintoon."
             )
             merged_count += 1
         else:
             kept.append(item)
 
     return kept, merged_count
-
 
 def actions_summary(mode, result, added, updated, rejected, cleanup_merged, baseline_restored, out_of_scope_removed, baseline_count):
     path = os.environ.get("GITHUB_STEP_SUMMARY")
@@ -789,10 +823,16 @@ def main():
     # Clean duplicate agent rows, but never collapse two baseline rows.
     articles, cleanup_merged = reconcile_existing_history(articles)
 
-    # Integrity pass: even cleanup must not be able to leave the baseline incomplete.
-    articles, restored_after_cleanup = ensure_baseline_history(articles)
-    baseline_restored += restored_after_cleanup
-    baseline_count, baseline_missing = baseline_coverage(articles)
+    # Cleanup must preserve all authoritative rows. If it does not, fail loudly:
+    # otherwise the workflow would keep "restoring" the same rows on every run.
+    baseline_count_after_cleanup, missing_after_cleanup = baseline_coverage(articles)
+    if baseline_count_after_cleanup != 43:
+        raise RuntimeError(
+            f"Cleanup removed baseline rows: {baseline_count_after_cleanup}/43, "
+            f"missing {missing_after_cleanup}"
+        )
+
+    baseline_count, baseline_missing = baseline_count_after_cleanup, missing_after_cleanup
     if baseline_missing:
         print(f"WARNING: baseline rows still missing: {baseline_missing}", file=sys.stderr)
 
@@ -957,9 +997,6 @@ def main():
     merged, final_removed = sanitize_existing_history(merged)
     if final_removed:
         removed_out_of_scope.extend(final_removed)
-    merged, final_restored = ensure_baseline_history(merged)
-    if final_restored:
-        baseline_restored += final_restored
     final_baseline_count, final_missing = baseline_coverage(merged)
     if final_baseline_count != 43:
         raise RuntimeError(f"Baseline integrity failure: {final_baseline_count}/43, missing {final_missing}")

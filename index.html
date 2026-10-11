@@ -33,7 +33,7 @@
     .btn{border:1px solid #686d77;background:transparent;color:#fff;border-radius:999px;padding:9px 13px;font-size:11px;font-weight:850}
     .btn.primary{background:#fff;color:var(--ink);border-color:#fff}
     main{padding-top:22px;padding-bottom:60px}
-    .brief{display:grid;grid-template-columns:minmax(0,2fr) repeat(4,minmax(105px,.55fr));border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:rgba(255,255,255,.45)}
+    .brief{display:grid;grid-template-columns:minmax(0,2fr) repeat(5,minmax(100px,.52fr));border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:rgba(255,255,255,.45)}
     .brief-main,.stat{padding:16px 18px;border-right:1px solid var(--line)}
     .stat:last-child{border-right:0}
     .label{font-size:9px;letter-spacing:.13em;text-transform:uppercase;font-weight:900;color:var(--muted)}
@@ -83,7 +83,7 @@
     .empty{border:1px dashed #bbb5ac;background:#fff;padding:30px;text-align:center;color:var(--muted)}
     footer{border-top:1px solid var(--line);padding:22px 0 35px;font-size:10px;color:var(--muted)}
     @media(max-width:980px){
-      .brief{grid-template-columns:repeat(4,1fr)} .brief-main{grid-column:1/-1}
+      .brief{grid-template-columns:repeat(5,1fr)} .brief-main{grid-column:1/-1}
       .row{grid-template-columns:95px 110px 1fr 34px}
       .r-source{grid-column:3}.r-title{grid-column:3}.r-meta{grid-column:3}.open{grid-column:4;grid-row:1/4}
       .r-country{grid-column:2;grid-row:1/4}.r-date{grid-column:1;grid-row:1/4}.expand{grid-column:3/5}
@@ -122,10 +122,11 @@
       <strong id="briefTitle">Ladataan…</strong>
       <p id="briefText">Haetaan seurannan nykytila.</p>
     </div>
-    <div class="stat"><div class="label">Uutta 24 h</div><b id="m24">–</b><span>löydettyä havaintoa</span></div>
+    <div class="stat"><div class="label">Viime ajossa</div><b id="mLastRun">–</b><span>aidosti uutta havaintoa</span></div>
+    <div class="stat"><div class="label">Löydetty 24 h</div><b id="mFound24">–</b><span>agentin löytämää havaintoa</span></div>
+    <div class="stat"><div class="label">Julkaistu 24 h</div><b id="mPublished24">–</b><span>oikeasti viimeisen vrk:n aikana</span></div>
     <div class="stat"><div class="label">Yhteensä</div><b id="mTotal">–</b><span>havaintoa</span></div>
     <div class="stat"><div class="label">Maita</div><b id="mCountries">–</b><span>maata</span></div>
-    <div class="stat"><div class="label">Kannanottoja</div><b id="mVoices">–</b><span>some / comment / statement</span></div>
   </section>
 
   <div class="nav">
@@ -156,6 +157,15 @@ const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const flags={SE:'🇸🇪',NO:'🇳🇴',DK:'🇩🇰',EE:'🇪🇪',LV:'🇱🇻',LT:'🇱🇹',DE:'🇩🇪',AT:'🇦🇹',CH:'🇨🇭',NL:'🇳🇱',BE:'🇧🇪',FR:'🇫🇷',GB:'🇬🇧',IE:'🇮🇪',PL:'🇵🇱',CZ:'🇨🇿',SK:'🇸🇰',IT:'🇮🇹',ES:'🇪🇸',PT:'🇵🇹',UA:'🇺🇦',RU:'🇷🇺',US:'🇺🇸',CA:'🇨🇦',AU:'🇦🇺',HR:'🇭🇷',BA:'🇧🇦',RS:'🇷🇸',SI:'🇸🇮',GR:'🇬🇷'};
 const voiceTypes=new Set(['SOCIAL_POST','STATEMENT','COMMENT','ORG_RELEASE']);
 const state={articles:[],status:{},view:'latest',q:'',type:''};
+const EVENT_START=new Date('2026-09-30T00:00:00Z');
+function inScope(a){
+  if(a && a.seed && Number.isInteger(a.source_row) && a.source_row>=1 && a.source_row<=43) return true;
+  const d=dt(a?.published_at);
+  return !d || d>=EVENT_START;
+}
+function baselineCoverage(items){
+  return new Set(items.filter(a=>a.seed&&Number.isInteger(a.source_row)&&a.source_row>=1&&a.source_row<=43).map(a=>a.source_row)).size;
+}
 
 function esc(v=''){return String(v).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
 function dt(v){const d=new Date(v);return Number.isNaN(d.getTime())?null:d}
@@ -190,19 +200,67 @@ function row(a){
 }
 function updateHeader(){
   const a=state.articles, countries=new Set(a.map(x=>x.country).filter(Boolean));
-  const n24=a.filter(x=>hours(x.first_seen||x.published_at)<=24).length, voices=a.filter(x=>voiceTypes.has(x.type)).length;
-  $('#m24').textContent=n24;$('#mTotal').textContent=a.length;$('#mCountries').textContent=countries.size;$('#mVoices').textContent=voices;
+  const found24=a.filter(x=>hours(x.first_seen||x.published_at)<=24).length;
+  const published24=a.filter(x=>hours(x.published_at)<=24).length;
+  const lastRun=Number(state.status.new_count||0);
+  $('#mLastRun').textContent=lastRun;
+  $('#mFound24').textContent=found24;
+  $('#mPublished24').textContent=published24;
+  $('#mTotal').textContent=a.length;
+  $('#mCountries').textContent=countries.size;
   const last=state.status.last_success||state.status.last_data_update, healthy=last&&hours(last)<8;
-  $('#watchDot').className='dot '+(healthy?'live':'warn');$('#watchLabel').textContent=healthy?'Automaattiseuranta päällä':'Seurannan tila tarkistettava';$('#watchTime').textContent='Viimeisin agenttiajo: '+(last?fmt(last):'–');
-  $('#briefTitle').textContent=n24?`${n24} uutta havaintoa viimeisen 24 tunnin aikana`:'Ei uusia havaintoja viimeisen 24 tunnin aikana';
+  $('#watchDot').className='dot '+(healthy?'live':'warn');
+  $('#watchLabel').textContent=healthy?'Automaattiseuranta päällä':'Seurannan tila tarkistettava';
+  const base=Number(state.status.baseline_coverage||baselineCoverage(a));
+  $('#watchTime').textContent='Viimeisin agenttiajo: '+(last?fmt(last):'–')+' · lähtöaineisto '+base+'/43';
+  $('#briefTitle').textContent=lastRun?`${lastRun} aidosti uutta havaintoa viime agenttiajossa`:'Ei uusia havaintoja viime agenttiajossa';
   $('#briefText').textContent=state.status.agent_summary_fi||`Seurannassa on ${a.length} havaintoa ${countries.size} maasta.`;
 }
 function renderList(title,items,note=''){
   return `<div class="section-head"><h2>${esc(title)}</h2><span>${esc(note||items.length+' havaintoa')}</span></div><div class="list">${items.map(row).join('')||'<div class="empty">Ei havaintoja tällä rajauksella.</div>'}</div>`;
 }
 function renderLatest(items){
-  const list=[...items].sort((a,b)=>freshTime(b)-freshTime(a)).slice(0,20);
-  return renderList('Uusimmat',list,'20 viimeksi löydettyä havaintoa · uusin ensin');
+  const published24=[...items]
+    .filter(a=>hours(a.published_at)<=24)
+    .sort((a,b)=>pubTime(b)-pubTime(a));
+
+  const newVoices=[...items]
+    .filter(a=>voiceTypes.has(a.type) && hours(a.first_seen||a.published_at)<=24 && Number(a.importance||0)>=3)
+    .sort((a,b)=>(Number(b.importance||0)-Number(a.importance||0)) || (freshTime(b)-freshTime(a)));
+
+  // Main chronology is based on publication time, not discovery time.
+  // This prevents an old low-importance article found today from jumping to the top.
+  const latestPublished=[...items]
+    .filter(a=>dt(a.published_at))
+    .sort((a,b)=>pubTime(b)-pubTime(a))
+    .slice(0,25);
+
+  // Older material found only now remains visible, but in its own clearly-labelled section.
+  const backfilled=[...items]
+    .filter(a=>{
+      const found=dt(a.first_seen);
+      const published=dt(a.published_at);
+      return found && published && hours(a.first_seen)<=24 && hours(a.published_at)>24;
+    })
+    .sort((a,b)=>freshTime(b)-freshTime(a))
+    .slice(0,15);
+
+  const publishedSection = published24.length
+    ? renderList('Uutta edellisen vuorokauden aikana',published24,`${published24.length} viimeisen 24 tunnin aikana julkaistua havaintoa`)
+    : `<div class="section-head"><h2>Uutta edellisen vuorokauden aikana</h2><span>Julkaisuaika</span></div><div class="empty">Ei viimeisen 24 tunnin aikana julkaistuja uusia osumia.</div>`;
+
+  const voicesSection = newVoices.length
+    ? renderList('Merkittävimmät uudet kannanotot',newVoices,`${newVoices.length} viimeisen 24 tunnin aikana löydettyä 3–5/5 kannanottoa`)
+    : `<div class="section-head"><h2>Merkittävimmät uudet kannanotot</h2><span>Löytöaika</span></div><div class="empty">Ei uusia merkittäviä kannanottoja viimeisen 24 tunnin aikana.</div>`;
+
+  const backfillSection = backfilled.length
+    ? renderList('Takautuvasti löydetyt',backfilled,`${backfilled.length} vanhempaa julkaisua, jotka agentti löysi vasta viimeisen 24 tunnin aikana`)
+    : '';
+
+  return publishedSection
+    + voicesSection
+    + renderList('Viimeisimmät julkaisut',latestPublished,'25 uusinta julkaisupäivän mukaan')
+    + backfillSection;
 }
 function renderAll(items){return renderList('Kaikki osumat',[...items].sort((a,b)=>pubTime(b)-pubTime(a)),`${items.length} havaintoa · julkaisuaika`)}
 function renderVoices(items){
@@ -248,15 +306,17 @@ function setTabs(){$$('.tab').forEach(b=>b.classList.toggle('active',b.dataset.v
 function reportHtml(){
   const all=[...state.articles].sort((a,b)=>pubTime(b)-pubTime(a));
   const countries=new Map();for(const a of all){const k=a.country||'Tuntematon';if(!countries.has(k))countries.set(k,[]);countries.get(k).push(a)}
-  const n24=all.filter(x=>hours(x.first_seen||x.published_at)<=24).length;
+  const found24=all.filter(x=>hours(x.first_seen||x.published_at)<=24).length;
+  const published24=all.filter(x=>hours(x.published_at)<=24).length;
+  const lastRun=Number(state.status.new_count||0);
   const voices=all.filter(x=>voiceTypes.has(x.type)).length;
-  const latest=[...all].sort((a,b)=>freshTime(b)-freshTime(a)).slice(0,10);
+  const latest=[...all].sort((a,b)=>pubTime(b)-pubTime(a)).slice(0,10);
   const item=x=>`<li style="margin:0 0 12px"><b>${esc(x.publisher||x.domain)}</b>${x.author?` / ${esc(x.author)}`:''} — ${esc(x.title||'')}<br><span style="color:#555">${esc(displayDate(x))} · ${esc(typeLabel(x))} · ${x.importance||2}/5</span>${x.summary_fi?`<br>${esc(x.summary_fi)}`:''}${x.url?`<br><a href="${esc(x.url)}">${esc(x.url)}</a>`:''}</li>`;
   return `<!doctype html><html><head><meta charset="utf-8"><title>STT World Watch -raportti</title></head><body style="font-family:Arial,sans-serif;line-height:1.45;color:#111">
     <h1>STT World Watch</h1><p><b>Kansainvälinen mediaseuranta</b> · seuranta 30.9.2026 alkaen</p>
     <p>Raportti muodostettu ${esc(fmt(new Date().toISOString()))}. Viimeisin agenttiajo: ${esc(fmt(state.status.last_success||state.status.last_data_update))}.</p>
     <h2>Tilannekuva</h2><p>${esc(state.status.agent_summary_fi||'Ei erillistä agenttiyhteenvetoa.')}</p>
-    <p><b>${all.length}</b> havaintoa · <b>${countries.size}</b> maata · <b>${n24}</b> uutta 24 tunnissa · <b>${voices}</b> kannanottoa/somehavaintoa.</p>
+    <p><b>${all.length}</b> havaintoa · <b>${countries.size}</b> maata · <b>${lastRun}</b> aidosti uutta viime agenttiajossa · <b>${found24}</b> löydetty viimeisen 24 h aikana · <b>${published24}</b> julkaistu viimeisen 24 h aikana · <b>${voices}</b> kannanottoa/somehavaintoa.</p>
     <h2>Uusimmat löydöt</h2><ol>${latest.map(item).join('')}</ol>
     <h2>Maittain</h2>
     ${[...countries.entries()].sort((a,b)=>b[1].length-a[1].length).map(([c,arr])=>`<h3>${esc(c)} (${arr.length})</h3><ol>${arr.sort((a,b)=>pubTime(b)-pubTime(a)).map(item).join('')}</ol>`).join('')}
@@ -281,7 +341,14 @@ async function load(){
     fetch(`./articles.json?v=${Date.now()}`).then(r=>{if(!r.ok)throw new Error(`articles.json ${r.status}`);return r.json()}),
     fetch(`./status.json?v=${Date.now()}`).then(r=>r.ok?r.json():{}).catch(()=>({}))
   ]);
-  state.articles=Array.isArray(articles)?articles:[];state.status=status||{};$('#downloadReport').disabled=false;render();
+  state.articles=(Array.isArray(articles)?articles:[]).filter(inScope);
+  state.status=status||{};
+  const base=Number(state.status.baseline_coverage||baselineCoverage(state.articles));
+  if(base<43){
+    console.warn(`STT World Watch baseline incomplete: ${base}/43`);
+  }
+  $('#downloadReport').disabled=false;
+  render();
 }
 load().catch(err=>{$('#content').innerHTML=`<div class="empty">Tietojen lataus epäonnistui: ${esc(err.message)}</div>`});
 </script>
