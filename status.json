@@ -1,16 +1,16 @@
 {
-  "last_data_update": "2026-10-11T12:13:47+00:00",
-  "last_success": "2026-10-11T12:13:47+00:00",
-  "new_count": 1,
-  "source_count": 209,
+  "last_data_update": "2026-10-11T12:18:47+00:00",
+  "last_success": "2026-10-11T12:18:47+00:00",
+  "new_count": 4,
+  "source_count": 202,
   "error": null,
   "agent_mode": "deep",
-  "agent_summary_fi": "Sweepissä löytyi kaksi historiasta puuttuvaa englanninkielistä julkaisua sekä yksi tunnetun norjalaisen uutisen tekijä- ja lähdetietoja korjaava havainto. Uusia merkittäviä kansainvälisiä kannanottajia tai 11.10.2026 julkaistuiksi varmennettuja osumia ei löytynyt. Uudet julkaisut käsittelevät sulkemisuhkaa, eivät vahvistettua lopettamispäätöstä. ([helsinkitimes.fi](https://www.helsinkitimes.fi/business/29329-finnish-news-agency-stt-faces-possible-closure-in-march.html?utm_source=openai))",
-  "agent_search_notes_fi": "Hakuja tehtiin englanniksi, ruotsiksi, norjaksi, tanskaksi, ranskaksi, saksaksi, espanjaksi, portugaliksi, italiaksi sekä bosnian/serbian/kroatian hakusanoilla. Mukana olivat STT:n nimellä tehdyt haut, kansallisen uutistoimiston rahoitusta ja katoamista koskevat temaattiset haut sekä alkuperäisjournalismia, mediapluralismia, kriisinkestävyyttä ja disinformaatiota käsittelevät haut. Tarkistettiin myös LinkedInin julkisia julkaisu- ja organisaationäkymiä sekä haettiin X- ja Bluesky-osumia. Tunnettuja kannanottoja ei palautettu uudelleen ilman olennaista rikastusta. Temaattisista hauista ei löytynyt uutta nimeämätöntä kannanottoa, jonka yhteys juuri STT-tapaukseen olisi riittävästi osoitettavissa. Helsinki Timesin erillinen avaaminen epäonnistui, mutta hakupalvelu palautti artikkelin päivätyn kokotekstin. Somepalvelujen indeksointi ja suhteelliset aikamerkinnät rajoittavat seurannan kattavuutta; tulos ei osoita, ettei uusia julkaisuja olisi olemassa.",
+  "agent_summary_fi": "Seuranta rajattiin ajalle 30.9.–11.10.2026 klo 12.16 UTC. Löytyi kolme historiasta puuttuvaa kansainvälistä somejulkaisua, yksi uusi Beta-aineiston jatkojulkaisu ja yksi englanninkielinen toimituksellinen uutinen. Lisäksi Novi listin tunnetun jutun aineistotausta tarkentui. Merkittävin uusi havainto on EFJ:n puheenjohtajan Maja Severin STT-julkaisu; se on kuitenkin järjestön tunnetun uutisen jakaminen, ei uusi laaja vetoomus. Uusia varmennettuja komission, Euroopan parlamentin tai Euroopan neuvoston institutionaalisia kannanottoja ei löytynyt.",
+  "agent_search_notes_fi": "Hakuja tehtiin englanniksi, ruotsiksi, norjaksi, saksaksi, ranskaksi, espanjaksi, portugaliksi, serbiaksi, sloveniaksi ja venäjäksi. Mukana olivat nimetyt uutistoimistojohtajat, EU-instituutiot, järjestöt, mediajulkaisut sekä LinkedIn-, X- ja Bluesky-haut. Temaattisia hakuja tehtiin myös ilman STT-sanaa uutistoimistojen rahoituksesta, sulkemisesta, tietoinfrastruktuurista, mediapluralismista ja disinformaatiosta. Geneerisiä julkaisuja ei hyväksytty ilman tapausyhteyttä. LinkedInin julkisesti indeksoidut profiilinäkymät näyttivät joitakin kokonaisia julkaisuja, mutta suorat avausyritykset epäonnistuivat; tällaisille havainnoille ei keksitty pysyviä postausosoitteita tai kalenteripäivämääriä. Suhteelliset ajat ovat indeksoidun näkymän tietoja, eivät tämän ajon kellosta laskettuja päiväyksiä. Historiassa tunnetut Schererin, Perdikarisin, Giboin, Vandendriesschen ja muiden julkaisut jätettiin palauttamatta, ellei uusi lähde parantanut metadataa. Myös ennen 30.9.2026 päivätyt lähteet sekä 29.10.2026 päivätty tuleva haastattelumerkintä suljettiin pois.",
   "updated_count": 1,
   "cleanup_merged": 4,
-  "baseline_restored": 9,
+  "baseline_restored": 2,
   "baseline_coverage": 43,
   "baseline_missing_rows": [],
-  "out_of_scope_removed": 8
+  "out_of_scope_removed": 0
 }
