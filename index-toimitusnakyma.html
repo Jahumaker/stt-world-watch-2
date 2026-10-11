@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="fi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#101216" />
+  <meta name="description" content="STT World Watch – STT:n kansainvälisen näkyvyyden semanttinen seuranta" />
+  <title>STT World Watch</title>
+  <style>
+    :root{
+      --ink:#111318; --paper:#f4f2ed; --white:#fff; --muted:#6d7179;
+      --line:#d8d4cc; --red:#c5162e; --green:#187549; --amber:#9b6100;
+      --soft:#ebe8e1; --max:1320px;
+      --serif:Georgia,"Times New Roman",serif;
+      --sans:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    }
+    *{box-sizing:border-box}
+    html{background:var(--paper);color:var(--ink);font-family:var(--sans)}
+    body{margin:0}
+    a{color:inherit}
+    button,input,select{font:inherit}
+    button{cursor:pointer}
+    .shell{max-width:var(--max);margin:auto;padding:0 22px}
+    header{background:var(--ink);color:#fff;border-bottom:5px solid var(--red)}
+    .head{display:grid;grid-template-columns:1fr auto;align-items:center;gap:24px;padding:22px 0}
+    .kicker{font-size:10px;letter-spacing:.15em;text-transform:uppercase;font-weight:900;color:#bfc3cb}
+    h1{font-family:var(--serif);font-size:46px;line-height:.95;margin:5px 0 7px;letter-spacing:-.04em}
+    .sub{font-size:13px;color:#cbd0d7}
+    .head-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+    .status{font-size:11px;color:#cbd0d7;text-align:right;margin-right:8px;line-height:1.4}
+    .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#888;margin-right:6px}
+    .dot.live{background:#37c579}.dot.warn{background:#e5a43c}
+    .btn{border:1px solid #686d77;background:transparent;color:#fff;border-radius:999px;padding:9px 13px;font-size:11px;font-weight:850}
+    .btn.primary{background:#fff;color:var(--ink);border-color:#fff}
+    main{padding-top:22px;padding-bottom:60px}
+    .brief{display:grid;grid-template-columns:minmax(0,2fr) repeat(5,minmax(100px,.52fr));border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:rgba(255,255,255,.45)}
+    .brief-main,.stat{padding:16px 18px;border-right:1px solid var(--line)}
+    .stat:last-child{border-right:0}
+    .label{font-size:9px;letter-spacing:.13em;text-transform:uppercase;font-weight:900;color:var(--muted)}
+    .brief-main strong{display:block;font-family:var(--serif);font-size:22px;margin:5px 0}
+    .brief-main p{margin:0;color:#4f535c;font-size:12px;line-height:1.45}
+    .stat b{display:block;font-family:var(--serif);font-size:32px;line-height:1;margin:8px 0 2px}
+    .stat span{font-size:10px;color:var(--muted)}
+    .nav{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;border-bottom:1px solid #bdb8af;margin-top:20px}
+    .tabs{display:flex;gap:20px;overflow:auto}
+    .tab{border:0;background:none;padding:14px 0 11px;font-size:11px;font-weight:900;letter-spacing:.05em;text-transform:uppercase;color:#6c7078;border-bottom:3px solid transparent;white-space:nowrap}
+    .tab.active{color:var(--ink);border-bottom-color:var(--red)}
+    .tools{display:flex;gap:7px;padding-bottom:8px}
+    .search,.select{background:#fff;border:1px solid #c9c4bc;border-radius:999px;padding:8px 12px;font-size:11px}
+    .search{width:250px}
+    .section-head{display:flex;align-items:baseline;justify-content:space-between;gap:20px;margin:25px 0 9px}
+    .section-head h2{font-family:var(--serif);font-size:27px;margin:0;letter-spacing:-.02em}
+    .section-head span{font-size:11px;color:var(--muted)}
+    .list{border-top:2px solid var(--ink)}
+    .row{display:grid;grid-template-columns:105px 125px minmax(150px,.8fr) minmax(320px,2fr) 100px 34px;gap:12px;align-items:start;padding:13px 5px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.3)}
+    .row:hover{background:#fff}
+    .r-date{font-size:10px;color:var(--muted);line-height:1.35}
+    .r-country{font-size:11px;font-weight:800}
+    .r-source{font-size:11px;line-height:1.35}
+    .r-source strong{font-size:12px}
+    .r-title{font-family:var(--serif);font-size:17px;line-height:1.12}
+    .r-title .fi{display:block;font-family:var(--sans);font-size:11px;font-weight:650;color:#595d65;margin-top:4px}
+    .r-meta{display:flex;gap:4px;flex-wrap:wrap}
+    .pill{display:inline-block;border:1px solid #d0ccc4;border-radius:999px;padding:3px 5px;font-size:8px;font-weight:900;letter-spacing:.03em;text-transform:uppercase;background:#faf9f6}
+    .pill.dark{background:var(--ink);border-color:var(--ink);color:#fff}
+    .pill.warn{color:var(--amber);background:#fff8e8}
+    .pill.ok{color:var(--green);background:#eff8f3}
+    .open{font-size:18px;text-decoration:none;color:var(--red);font-weight:900;text-align:right}
+    .expand{grid-column:4 / 7;font-size:11px;line-height:1.5;color:#4f535c;padding:0 0 5px}
+    details.compact summary{cursor:pointer;font-size:10px;color:var(--muted);margin-top:5px}
+    .country-block{margin-bottom:24px}
+    .country-title{display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid var(--ink);padding-bottom:6px}
+    .country-title h3{font-family:var(--serif);font-size:25px;margin:0}
+    .country-title span{font-size:11px;color:var(--muted)}
+    .summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+    .summary-list{border-top:2px solid var(--ink)}
+    .summary-line{display:flex;justify-content:space-between;gap:12px;padding:10px 4px;border-bottom:1px solid var(--line);font-size:12px}
+    .summary-line b{font-family:var(--serif);font-size:18px}
+    .voice-line{display:grid;grid-template-columns:130px 1fr 55px;gap:12px;padding:11px 4px;border-bottom:1px solid var(--line)}
+    .voice-line strong{font-size:12px}
+    .voice-line .v-title{font-family:var(--serif);font-size:16px}
+    .timeline-row{display:grid;grid-template-columns:150px 130px 1fr;gap:15px;border-bottom:1px solid var(--line);padding:10px 4px;font-size:11px}
+    .empty{border:1px dashed #bbb5ac;background:#fff;padding:30px;text-align:center;color:var(--muted)}
+    footer{border-top:1px solid var(--line);padding:22px 0 35px;font-size:10px;color:var(--muted)}
+    @media(max-width:980px){
+      .brief{grid-template-columns:repeat(5,1fr)} .brief-main{grid-column:1/-1}
+      .row{grid-template-columns:95px 110px 1fr 34px}
+      .r-source{grid-column:3}.r-title{grid-column:3}.r-meta{grid-column:3}.open{grid-column:4;grid-row:1/4}
+      .r-country{grid-column:2;grid-row:1/4}.r-date{grid-column:1;grid-row:1/4}.expand{grid-column:3/5}
+      .summary-grid{grid-template-columns:1fr}
+    }
+    @media(max-width:720px){
+      .shell{padding:0 14px}.head{grid-template-columns:1fr}.head-actions{justify-content:flex-start}.status{text-align:left;width:100%}
+      h1{font-size:39px}.brief{grid-template-columns:1fr 1fr}.brief-main{grid-column:1/-1}
+      .nav{display:block}.tools{padding:10px 0;display:grid;grid-template-columns:1fr 1fr}.search{width:100%}
+      .row{grid-template-columns:76px 1fr 28px;gap:8px}.r-date{grid-column:1;grid-row:1/5}.r-country,.r-source,.r-title,.r-meta{grid-column:2}
+      .r-country{grid-row:auto}.r-source{grid-row:auto}.open{grid-column:3;grid-row:1/5}.expand{grid-column:2/4}
+      .timeline-row{grid-template-columns:1fr;gap:4px}
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div class="shell head">
+    <div>
+      <div class="kicker">STT · kansainvälinen mediaseuranta</div>
+      <h1>WORLD WATCH</h1>
+      <div class="sub">Uutiset, uutistoimistot, kannanotot ja merkittävät some-osumat · seuranta 30.9.2026 alkaen</div>
+    </div>
+    <div class="head-actions">
+      <div class="status"><div><span id="watchDot" class="dot"></span><span id="watchLabel">Tarkistetaan…</span></div><div id="watchTime">Viimeisin agenttiajo: –</div></div>
+      <button id="downloadReport" class="btn primary" disabled>Lataa raportti (Word)</button>
+      <button id="refreshBtn" class="btn">Päivitä</button>
+    </div>
+  </div>
+</header>
+
+<main class="shell">
+  <section class="brief">
+    <div class="brief-main">
+      <div class="label">Viimeisin agentin tilannekuva</div>
+      <strong id="briefTitle">Ladataan…</strong>
+      <p id="briefText">Haetaan seurannan nykytila.</p>
+    </div>
+    <div class="stat"><div class="label">Viime ajossa</div><b id="mLastRun">–</b><span>aidosti uutta havaintoa</span></div>
+    <div class="stat"><div class="label">Löydetty 24 h</div><b id="mFound24">–</b><span>agentin löytämää havaintoa</span></div>
+    <div class="stat"><div class="label">Julkaistu 24 h</div><b id="mPublished24">–</b><span>oikeasti viimeisen vrk:n aikana</span></div>
+    <div class="stat"><div class="label">Yhteensä</div><b id="mTotal">–</b><span>havaintoa</span></div>
+    <div class="stat"><div class="label">Maita</div><b id="mCountries">–</b><span>maata</span></div>
+  </section>
+
+  <div class="nav">
+    <div class="tabs">
+      <button class="tab active" data-view="latest">Uusimmat</button>
+      <button class="tab" data-view="countries">Maittain</button>
+      <button class="tab" data-view="overview">Kokonaisuus</button>
+      <button class="tab" data-view="voices">Kannanotot & some</button>
+      <button class="tab" data-view="all">Kaikki</button>
+      <button class="tab" data-view="timeline">Aikajana</button>
+    </div>
+    <div class="tools">
+      <input id="searchInput" class="search" type="search" placeholder="Hae henkilöä, mediaa, maata…">
+      <select id="typeFilter" class="select">
+        <option value="">Kaikki tyypit</option>
+        <option>ORIGINAL</option><option>AGENCY</option><option>SYNDICATED</option><option>COMMENT</option>
+        <option>FOLLOW-UP</option><option>STATEMENT</option><option>SOCIAL_POST</option><option>ORG_RELEASE</option><option>AGGREGATOR</option>
+      </select>
+    </div>
+  </div>
+  <section id="content"></section>
+</main>
+
+<footer><div class="shell">STT World Watch · GitHub Pages · semanttinen seuranta OpenAI-agentilla</div></footer>
+
+<script>
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const flags={SE:'🇸🇪',NO:'🇳🇴',DK:'🇩🇰',EE:'🇪🇪',LV:'🇱🇻',LT:'🇱🇹',DE:'🇩🇪',AT:'🇦🇹',CH:'🇨🇭',NL:'🇳🇱',BE:'🇧🇪',FR:'🇫🇷',GB:'🇬🇧',IE:'🇮🇪',PL:'🇵🇱',CZ:'🇨🇿',SK:'🇸🇰',IT:'🇮🇹',ES:'🇪🇸',PT:'🇵🇹',UA:'🇺🇦',RU:'🇷🇺',US:'🇺🇸',CA:'🇨🇦',AU:'🇦🇺',HR:'🇭🇷',BA:'🇧🇦',RS:'🇷🇸',SI:'🇸🇮',GR:'🇬🇷'};
+const voiceTypes=new Set(['SOCIAL_POST','STATEMENT','COMMENT','ORG_RELEASE']);
+const state={articles:[],status:{},view:'latest',q:'',type:''};
+
+function esc(v=''){return String(v).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
+function dt(v){const d=new Date(v);return Number.isNaN(d.getTime())?null:d}
+function fmt(v,withTime=true){const d=dt(v);if(!d)return'–';return new Intl.DateTimeFormat('fi-FI',withTime?{dateStyle:'medium',timeStyle:'short'}:{dateStyle:'medium'}).format(d)}
+function freshTime(a){return dt(a.first_seen)||dt(a.published_at)||new Date(0)}
+function pubTime(a){return dt(a.published_at)||new Date(0)}
+function hours(v){const d=dt(v);return d?(Date.now()-d.getTime())/36e5:99999}
+function displayDate(a){return a.date_note||fmt(a.published_at)}
+function typeLabel(a){return a.type||'ORIGINAL'}
+function matchLabel(a){const m=a.match_class||(a.direct_stt_reference===false?'POSSIBLE_MATCH':'CONFIRMED');return m==='POSSIBLE_MATCH'?'Tarkistettava':m==='STRONG_MATCH'?'Vahva':'Vahvistettu'}
+function filtered(){
+  const q=state.q.trim().toLocaleLowerCase('fi');
+  return state.articles.filter(a=>{
+    const hay=[a.title,a.title_fi,a.publisher,a.country,a.agency,a.domain,a.author,a.author_role,a.platform,a.reason_fi,a.summary_fi,a.match_class].filter(Boolean).join(' ').toLocaleLowerCase('fi');
+    return(!q||hay.includes(q))&&(!state.type||a.type===state.type);
+  });
+}
+function row(a){
+  const flag=flags[a.country_code]||'🌐',imp=Number(a.importance||2);
+  const link=a.url?`<a class="open" href="${esc(a.url)}" target="_blank" rel="noopener">→</a>`:'';
+  const detail=[a.summary_fi,a.reason_fi?`Miksi tärkeä: ${a.reason_fi}`:''].filter(Boolean).join(' ');
+  return `<div class="row">
+    <div class="r-date">${esc(displayDate(a))}${a.first_seen?`<br><span title="Löydetty">${esc(fmt(a.first_seen,false))}</span>`:''}</div>
+    <div class="r-country">${flag} ${esc(a.country||'Tuntematon')}</div>
+    <div class="r-source"><strong>${esc(a.publisher||a.domain||'–')}</strong>${a.author?`<br>${esc(a.author)}${a.author_role?' · '+esc(a.author_role):''}`:''}${a.agency?`<br>${esc(a.agency)}`:''}</div>
+    <div class="r-title">${esc(a.title||'–')}${a.title_fi&&a.title_fi!==a.title?`<span class="fi">${esc(a.title_fi)}</span>`:''}
+      ${detail?`<details class="compact"><summary>Tiivistelmä ja merkitys</summary><div>${esc(detail)}</div></details>`:''}
+    </div>
+    <div class="r-meta"><span class="pill">${esc(typeLabel(a))}</span><span class="pill ${imp>=5?'dark':''}">${imp}/5</span><span class="pill ${matchLabel(a)==='Tarkistettava'?'warn':'ok'}">${esc(matchLabel(a))}</span>${a.platform?`<span class="pill">${esc(a.platform)}</span>`:''}</div>
+    <div>${link}</div>
+  </div>`;
+}
+function updateHeader(){
+  const a=state.articles, countries=new Set(a.map(x=>x.country).filter(Boolean));
+  const found24=a.filter(x=>hours(x.first_seen||x.published_at)<=24).length;
+  const published24=a.filter(x=>hours(x.published_at)<=24).length;
+  const lastRun=Number(state.status.new_count||0);
+  $('#mLastRun').textContent=lastRun;
+  $('#mFound24').textContent=found24;
+  $('#mPublished24').textContent=published24;
+  $('#mTotal').textContent=a.length;
+  $('#mCountries').textContent=countries.size;
+  const last=state.status.last_success||state.status.last_data_update, healthy=last&&hours(last)<8;
+  $('#watchDot').className='dot '+(healthy?'live':'warn');
+  $('#watchLabel').textContent=healthy?'Automaattiseuranta päällä':'Seurannan tila tarkistettava';
+  $('#watchTime').textContent='Viimeisin agenttiajo: '+(last?fmt(last):'–');
+  $('#briefTitle').textContent=lastRun?`${lastRun} aidosti uutta havaintoa viime agenttiajossa`:'Ei uusia havaintoja viime agenttiajossa';
+  $('#briefText').textContent=state.status.agent_summary_fi||`Seurannassa on ${a.length} havaintoa ${countries.size} maasta.`;
+}
+function renderList(title,items,note=''){
+  return `<div class="section-head"><h2>${esc(title)}</h2><span>${esc(note||items.length+' havaintoa')}</span></div><div class="list">${items.map(row).join('')||'<div class="empty">Ei havaintoja tällä rajauksella.</div>'}</div>`;
+}
+function renderLatest(items){
+  const published24=[...items]
+    .filter(a=>hours(a.published_at)<=24)
+    .sort((a,b)=>pubTime(b)-pubTime(a));
+
+  const newVoices=[...items]
+    .filter(a=>voiceTypes.has(a.type) && hours(a.first_seen||a.published_at)<=24 && Number(a.importance||0)>=3)
+    .sort((a,b)=>(Number(b.importance||0)-Number(a.importance||0)) || (freshTime(b)-freshTime(a)));
+
+  const latestFound=[...items]
+    .sort((a,b)=>freshTime(b)-freshTime(a))
+    .slice(0,25);
+
+  const publishedSection = published24.length
+    ? renderList('Uutta edellisen vuorokauden aikana',published24,`${published24.length} viimeisen 24 tunnin aikana julkaistua havaintoa`)
+    : `<div class="section-head"><h2>Uutta edellisen vuorokauden aikana</h2><span>Julkaisuaika</span></div><div class="empty">Ei viimeisen 24 tunnin aikana julkaistuja uusia osumia.</div>`;
+
+  const voicesSection = newVoices.length
+    ? renderList('Merkittävimmät uudet kannanotot',newVoices,`${newVoices.length} viimeisen 24 tunnin aikana löydettyä 3–5/5 kannanottoa`)
+    : `<div class="section-head"><h2>Merkittävimmät uudet kannanotot</h2><span>Löytöaika</span></div><div class="empty">Ei uusia merkittäviä kannanottoja viimeisen 24 tunnin aikana.</div>`;
+
+  return publishedSection
+    + voicesSection
+    + renderList('Uusimmat löydöt',latestFound,'25 viimeksi löydettyä havaintoa · löytöaika, ei välttämättä julkaisuaika');
+}
+function renderAll(items){return renderList('Kaikki osumat',[...items].sort((a,b)=>pubTime(b)-pubTime(a)),`${items.length} havaintoa · julkaisuaika`)}
+function renderVoices(items){
+  const v=items.filter(a=>voiceTypes.has(a.type)).sort((a,b)=>freshTime(b)-freshTime(a));
+  return renderList('Kannanotot & some',v,`${v.length} henkilö- tai järjestölähtöistä havaintoa`);
+}
+function renderCountries(items){
+  const map=new Map();for(const a of items){const k=a.country||'Tuntematon';if(!map.has(k))map.set(k,[]);map.get(k).push(a)}
+  const blocks=[...map.entries()].sort((a,b)=>b[1].length-a[1].length||a[0].localeCompare(b[0],'fi')).map(([country,arr])=>{
+    arr.sort((a,b)=>pubTime(b)-pubTime(a));const sample=arr[0],flag=flags[sample?.country_code]||'🌐';
+    return `<div class="country-block"><div class="country-title"><h3>${flag} ${esc(country)}</h3><span>${arr.length} havaintoa</span></div><div class="list">${arr.map(row).join('')}</div></div>`
+  }).join('');
+  return `<div class="section-head"><h2>Maittain</h2><span>${map.size} maata</span></div>${blocks||'<div class="empty">Ei maita.</div>'}`;
+}
+function renderOverview(items){
+  const countries=new Map(),types=new Map(),agencies=new Map();
+  for(const a of items){countries.set(a.country||'Tuntematon',(countries.get(a.country||'Tuntematon')||0)+1);types.set(typeLabel(a),(types.get(typeLabel(a))||0)+1);if(a.agency)agencies.set(a.agency,(agencies.get(a.agency)||0)+1)}
+  const lines=m=>[...m.entries()].sort((a,b)=>b[1]-a[1]).map(([x,n])=>`<div class="summary-line"><span>${esc(x)}</span><b>${n}</b></div>`).join('');
+  const voices=items.filter(a=>voiceTypes.has(a.type)&&Number(a.importance||0)>=4).sort((a,b)=>(b.importance||0)-(a.importance||0)||freshTime(b)-freshTime(a)).slice(0,12);
+  return `<div class="section-head"><h2>Kokonaisuus</h2><span>${items.length} havaintoa</span></div>
+    <div class="summary-grid">
+      <div><div class="label">Maat</div><div class="summary-list">${lines(countries)}</div></div>
+      <div><div class="label">Julkaisutyypit</div><div class="summary-list">${lines(types)}</div></div>
+      <div><div class="label">Uutistoimistot</div><div class="summary-list">${lines(agencies)||'<div class="summary-line"><span>Ei tunnistettuja</span><b>–</b></div>'}</div></div>
+      <div><div class="label">Merkittävät kannanotot</div><div class="summary-list">${voices.map(a=>`<div class="voice-line"><strong>${esc(a.author||a.publisher)}</strong><div class="v-title">${esc(a.title)}</div><b>${a.importance}/5</b></div>`).join('')||'<div class="summary-line"><span>Ei merkittäviä kannanottoja</span><b>–</b></div>'}</div></div>
+    </div>`;
+}
+function renderTimeline(items){
+  const rows=[...items].sort((a,b)=>pubTime(b)-pubTime(a)).map(a=>`<div class="timeline-row"><div>${esc(displayDate(a))}</div><div>${flags[a.country_code]||'🌐'} ${esc(a.country||'')}</div><div><strong>${esc(a.publisher||a.domain)}</strong> · ${a.url?`<a href="${esc(a.url)}" target="_blank" rel="noopener">${esc(a.title)}</a>`:esc(a.title)}</div></div>`).join('');
+  return `<div class="section-head"><h2>Aikajana</h2><span>Uusin julkaisu ensin</span></div><div class="list">${rows||'<div class="empty">Ei havaintoja.</div>'}</div>`;
+}
+function render(){
+  updateHeader();const items=filtered();
+  if(state.view==='latest')$('#content').innerHTML=renderLatest(items);
+  if(state.view==='countries')$('#content').innerHTML=renderCountries(items);
+  if(state.view==='overview')$('#content').innerHTML=renderOverview(items);
+  if(state.view==='voices')$('#content').innerHTML=renderVoices(items);
+  if(state.view==='all')$('#content').innerHTML=renderAll(items);
+  if(state.view==='timeline')$('#content').innerHTML=renderTimeline(items);
+}
+function setTabs(){$$('.tab').forEach(b=>b.classList.toggle('active',b.dataset.view===state.view))}
+
+function reportHtml(){
+  const all=[...state.articles].sort((a,b)=>pubTime(b)-pubTime(a));
+  const countries=new Map();for(const a of all){const k=a.country||'Tuntematon';if(!countries.has(k))countries.set(k,[]);countries.get(k).push(a)}
+  const found24=all.filter(x=>hours(x.first_seen||x.published_at)<=24).length;
+  const published24=all.filter(x=>hours(x.published_at)<=24).length;
+  const lastRun=Number(state.status.new_count||0);
+  const voices=all.filter(x=>voiceTypes.has(x.type)).length;
+  const latest=[...all].sort((a,b)=>freshTime(b)-freshTime(a)).slice(0,10);
+  const item=x=>`<li style="margin:0 0 12px"><b>${esc(x.publisher||x.domain)}</b>${x.author?` / ${esc(x.author)}`:''} — ${esc(x.title||'')}<br><span style="color:#555">${esc(displayDate(x))} · ${esc(typeLabel(x))} · ${x.importance||2}/5</span>${x.summary_fi?`<br>${esc(x.summary_fi)}`:''}${x.url?`<br><a href="${esc(x.url)}">${esc(x.url)}</a>`:''}</li>`;
+  return `<!doctype html><html><head><meta charset="utf-8"><title>STT World Watch -raportti</title></head><body style="font-family:Arial,sans-serif;line-height:1.45;color:#111">
+    <h1>STT World Watch</h1><p><b>Kansainvälinen mediaseuranta</b> · seuranta 30.9.2026 alkaen</p>
+    <p>Raportti muodostettu ${esc(fmt(new Date().toISOString()))}. Viimeisin agenttiajo: ${esc(fmt(state.status.last_success||state.status.last_data_update))}.</p>
+    <h2>Tilannekuva</h2><p>${esc(state.status.agent_summary_fi||'Ei erillistä agenttiyhteenvetoa.')}</p>
+    <p><b>${all.length}</b> havaintoa · <b>${countries.size}</b> maata · <b>${lastRun}</b> aidosti uutta viime agenttiajossa · <b>${found24}</b> löydetty viimeisen 24 h aikana · <b>${published24}</b> julkaistu viimeisen 24 h aikana · <b>${voices}</b> kannanottoa/somehavaintoa.</p>
+    <h2>Uusimmat löydöt</h2><ol>${latest.map(item).join('')}</ol>
+    <h2>Maittain</h2>
+    ${[...countries.entries()].sort((a,b)=>b[1].length-a[1].length).map(([c,arr])=>`<h3>${esc(c)} (${arr.length})</h3><ol>${arr.sort((a,b)=>pubTime(b)-pubTime(a)).map(item).join('')}</ol>`).join('')}
+    <hr><p style="font-size:10px;color:#666">Automaattisesti muodostettu STT World Watch -seurannasta. Mahdolliset POSSIBLE_MATCH-havainnot on syytä tarkistaa alkuperäislähteestä.</p>
+  </body></html>`;
+}
+function downloadReport(){
+  const blob=new Blob(['\ufeff',reportHtml()],{type:'application/msword;charset=utf-8'});
+  const url=URL.createObjectURL(blob),a=document.createElement('a');
+  const day=new Date().toISOString().slice(0,10);
+  a.href=url;a.download=`STT_World_Watch_raportti_${day}.doc`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+
+$$('.tab').forEach(b=>b.addEventListener('click',()=>{state.view=b.dataset.view;setTabs();render()}));
+$('#searchInput').addEventListener('input',e=>{state.q=e.target.value;render()});
+$('#typeFilter').addEventListener('change',e=>{state.type=e.target.value;render()});
+$('#refreshBtn').addEventListener('click',()=>location.reload());
+$('#downloadReport').addEventListener('click',downloadReport);
+
+async function load(){
+  const [articles,status]=await Promise.all([
+    fetch(`./articles.json?v=${Date.now()}`).then(r=>{if(!r.ok)throw new Error(`articles.json ${r.status}`);return r.json()}),
+    fetch(`./status.json?v=${Date.now()}`).then(r=>r.ok?r.json():{}).catch(()=>({}))
+  ]);
+  state.articles=Array.isArray(articles)?articles:[];state.status=status||{};$('#downloadReport').disabled=false;render();
+}
+load().catch(err=>{$('#content').innerHTML=`<div class="empty">Tietojen lataus epäonnistui: ${esc(err.message)}</div>`});
+</script>
+</body>
+</html>
