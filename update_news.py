@@ -17,6 +17,9 @@ ROOT = Path(__file__).resolve().parent
 ARTICLES_PATH = ROOT / "articles.json"
 STATUS_PATH = ROOT / "status.json"
 
+EVENT_START = datetime(2026, 9, 30, 0, 0, tzinfo=timezone.utc)
+BASELINE_SOURCE_ROWS = set(range(1, 44))
+
 # Authoritative baseline from the 30.9.–10.10.2026 monitoring report.
 # This is intentionally embedded so the workflow can restore any missing
 # historical observations before deciding what is "new".
@@ -293,7 +296,8 @@ TEE PERUSTEELLINEN PÄIVITTÄINEN SWEEP.
 - Tarkista uutiset, uutistoimistot, media-alan julkaisut, järjestöt ja julkisesti
   indeksoituvat LinkedIn-, X-, Bluesky- ja muut somepostaukset.
 - Etsi sekä viime päivien uudet osumat että mahdolliset aiemmin väliin jääneet osumat
-  30.9.2026 jälkeen. Palauta vain osumat, joita tunnetussa historiassa ei vielä ole.
+  30.9.2026 alkaen. ÄLÄ palauta mitään ennen 30.9.2026 julkaistua: tämä seurattava
+  tapahtuma alkoi vasta 30.9.2026. Palauta vain osumat, joita tunnetussa historiassa ei vielä ole.
 - Tee myös temaattisia hakuja ilman STT-sanaa: national news agency closure/funding,
   original journalism infrastructure, media pluralism, resilience, information
   security, disinformation + Finland/Finnish/context. Hyväksy tällainen osuma vain,
@@ -304,6 +308,7 @@ TEE PERUSTEELLINEN PÄIVITTÄINEN SWEEP.
         scope = """
 TEE NOPEA SEURANTAKIERROS.
 - Keskity noin viimeiseen 36 tuntiin.
+- ÄLÄ hyväksy ennen 30.9.2026 julkaistuja osumia; ne eivät voi kuulua tähän tapahtumaseurantaan.
 - Etsi uudet suorat STT-osumat, merkittävät uutis-/järjestökannanotot ja julkiset
   somepostaukset sekä vahvat epäsuorat osumat.
 - Tee muutama monikielinen ja temaattinen haku; älä käytä aikaa jo tunnettujen
@@ -425,6 +430,38 @@ def seed_title_is_placeholder(item):
     parts = {fold_identity_text(x) for x in re.split(r"\s*/\s*", item.get("title") or "") if x.strip()}
     known = {x for x in (pub, author, agency) if x}
     return bool(parts and parts.issubset(known))
+
+
+def sanitize_existing_history(articles):
+    """
+    Remove prototype/search-noise rows that predate the STT event.
+    The monitoring event starts on 30 Sep 2026. The authoritative 43-row
+    baseline is protected separately and will be restored after cleanup.
+    """
+    kept = []
+    removed = []
+    for item in articles:
+        # Protect exact baseline rows; their dates are defined by the report.
+        if item.get("seed") and item.get("source_row") in BASELINE_SOURCE_ROWS:
+            kept.append(item)
+            continue
+
+        d = _dt(item.get("published_at"))
+        if d and d < EVENT_START:
+            removed.append(item)
+            continue
+        kept.append(item)
+    return kept, removed
+
+
+def baseline_coverage(articles):
+    rows = {
+        int(a.get("source_row"))
+        for a in articles
+        if a.get("seed") and isinstance(a.get("source_row"), int)
+        and a.get("source_row") in BASELINE_SOURCE_ROWS
+    }
+    return len(rows), sorted(BASELINE_SOURCE_ROWS - rows)
 
 
 def ensure_baseline_history(articles):
@@ -654,6 +691,12 @@ def reconcile_existing_history(articles):
     for item in articles:
         target = None
         for existing in kept:
+            # The report contains 43 intentional observation rows. Never collapse
+            # one authoritative baseline row into another, even when several are
+            # syndications of the same agency copy.
+            if existing.get("seed") and item.get("seed"):
+                continue
+
             if same_observation(existing, item):
                 target = existing
                 break
@@ -686,7 +729,7 @@ def reconcile_existing_history(articles):
     return kept, merged_count
 
 
-def actions_summary(mode, result, added, updated, rejected, cleanup_merged, baseline_restored):
+def actions_summary(mode, result, added, updated, rejected, cleanup_merged, baseline_restored, out_of_scope_removed, baseline_count):
     path = os.environ.get("GITHUB_STEP_SUMMARY")
     if not path:
         return
@@ -698,6 +741,8 @@ def actions_summary(mode, result, added, updated, rejected, cleanup_merged, base
         f"- Genuinely new observations: **{len(added)}**",
         f"- Existing observations enriched: **{len(updated)}**",
         f"- Historical baseline rows restored: **{baseline_restored}**",
+        f"- Historical baseline integrity: **{baseline_count}/43**",
+        f"- Pre-30.9.2026 noise rows removed: **{out_of_scope_removed}**",
         f"- Old duplicate rows merged in cleanup: **{cleanup_merged}**",
         f"- Rejected/unverifiable candidates: **{len(rejected)}**",
         f"- Run time: **{now_iso()}**",
@@ -735,12 +780,21 @@ def main():
         print("articles.json ei ole taulukko.", file=sys.stderr)
         sys.exit(2)
 
-    # Self-heal the historical baseline first. This prevents a partially uploaded
-    # articles.json from making old 30.9.–10.10 observations look new.
+    # First remove old prototype/search-noise that predates the event.
+    articles, removed_out_of_scope = sanitize_existing_history(articles)
+
+    # Self-heal the authoritative 43-row baseline.
     articles, baseline_restored = ensure_baseline_history(articles)
 
-    # Then clean duplicate rows created by earlier agent runs.
+    # Clean duplicate agent rows, but never collapse two baseline rows.
     articles, cleanup_merged = reconcile_existing_history(articles)
+
+    # Integrity pass: even cleanup must not be able to leave the baseline incomplete.
+    articles, restored_after_cleanup = ensure_baseline_history(articles)
+    baseline_restored += restored_after_cleanup
+    baseline_count, baseline_missing = baseline_coverage(articles)
+    if baseline_missing:
+        print(f"WARNING: baseline rows still missing: {baseline_missing}", file=sys.stderr)
 
     model = os.environ.get("OPENAI_MODEL", "gpt-6.1-sol")
     effort = "medium" if args.mode == "deep" else "low"
@@ -803,6 +857,17 @@ def main():
 
         raw["url"] = normalize_url(url)
         raw["domain"] = raw.get("domain") or dom
+
+        # Hard scope boundary. A story/post published before the event started
+        # is not an STT closure-threat observation, no matter how similar the theme.
+        raw_published = parse_date(raw.get("published_at"))
+        raw_dt = _dt(raw_published) if raw_published else None
+        if raw_dt and raw_dt < EVENT_START:
+            rejected.append(
+                f"pre-event item skipped ({raw_dt.date()}): "
+                f"{raw.get('publisher')} — {raw.get('title')}"
+            )
+            continue
 
         confidence = max(0.0, min(1.0, float(raw.get("confidence") or 0)))
         if raw.get("match_class") == "POSSIBLE_MATCH" and confidence < 0.55:
@@ -877,9 +942,9 @@ def main():
         }
         added.append(article)
 
-    actions_summary(args.mode, result, added, updated, rejected, cleanup_merged, baseline_restored)
+    actions_summary(args.mode, result, added, updated, rejected, cleanup_merged, baseline_restored, len(removed_out_of_scope), baseline_count)
 
-    changed = bool(added or updated or cleanup_merged or baseline_restored)
+    changed = bool(added or updated or cleanup_merged or baseline_restored or removed_out_of_scope)
     if not changed:
         print("No genuinely new or enrichable items. Repository data left unchanged.")
         if rejected:
@@ -889,6 +954,15 @@ def main():
         return
 
     merged = articles + added
+    merged, final_removed = sanitize_existing_history(merged)
+    if final_removed:
+        removed_out_of_scope.extend(final_removed)
+    merged, final_restored = ensure_baseline_history(merged)
+    if final_restored:
+        baseline_restored += final_restored
+    final_baseline_count, final_missing = baseline_coverage(merged)
+    if final_baseline_count != 43:
+        raise RuntimeError(f"Baseline integrity failure: {final_baseline_count}/43, missing {final_missing}")
     merged.sort(key=lambda a: a.get("published_at") or "", reverse=True)
     ARTICLES_PATH.write_text(
         json.dumps(merged, ensure_ascii=False, indent=2) + "\n",
@@ -903,6 +977,9 @@ def main():
         "updated_count": len(updated),
         "cleanup_merged": cleanup_merged,
         "baseline_restored": baseline_restored,
+        "baseline_coverage": final_baseline_count,
+        "baseline_missing_rows": final_missing,
+        "out_of_scope_removed": len(removed_out_of_scope),
         "source_count": len(sources),
         "error": None,
         "agent_mode": args.mode,
@@ -917,7 +994,8 @@ def main():
     print(
         f"Added {len(added)} genuinely new observations; "
         f"enriched {len(updated)} existing observations; "
-        f"baseline restored {baseline_restored}; cleanup merged {cleanup_merged} old duplicate rows."
+        f"baseline restored {baseline_restored}; baseline {baseline_count}/43; "
+        f"removed {len(removed_out_of_scope)} pre-event rows; cleanup merged {cleanup_merged} old duplicate rows."
     )
     for a in added:
         print(f"+ {a['match_class']} {a['importance']}/5 {a['publisher']}: {a['title']}")
