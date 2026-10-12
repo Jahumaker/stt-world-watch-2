@@ -12,5 +12,6 @@
   "baseline_restored": 0,
   "baseline_coverage": 43,
   "baseline_missing_rows": [],
-  "out_of_scope_removed": 0
+  "out_of_scope_removed": 0,
+  "uncertain_publication_dates_fixed": 15
 }

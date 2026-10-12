@@ -9,7 +9,7 @@
     "publisher": "Henrik Brors",
     "country": "Ruotsi",
     "country_code": "SE",
-    "published_at": "2026-10-11T12:30:14+00:00",
+    "published_at": null,
     "date_note": "Indeksoitu profiilinäkymä näyttää postaukselle suhteellisen ajan ”5d”. Absoluuttista päivämäärää ja pysyvää postausosoitetta ei vahvistettu. Postaus linkittää seurattavaa 30.9.2026 alkanutta tilannetta käsittelevään Svenska Ylen uutiseen. Otsikko on postauksen aloitusvirke.",
     "author": "Henrik Brors",
     "author_role": "EU-journalisti ja poliittinen kommentaattori; entinen TT:n EU-kirjeenvaihtaja ja DN:n politiikantoimituksen johtaja",
@@ -26,7 +26,9 @@
     "seed": false,
     "link_verified": true,
     "discovered_by": "openai_web_search_agent",
-    "history_action": "NEW"
+    "history_action": "NEW",
+    "history_published_at": "2026-10-11T12:30:14+00:00",
+    "publication_time_status": "unknown"
   },
   {
     "id": "f7e7ff1ed469b20b",
@@ -38,7 +40,7 @@
     "publisher": "Maja Sever; julkaisu näkyvissä Martin Pigeonin LinkedIn-profiilin reaktionäkymässä",
     "country": "Kroatia",
     "country_code": "HR",
-    "published_at": "2026-10-11T12:18:47+00:00",
+    "published_at": null,
     "date_note": "Indeksoitu näkymä näyttää suhteellisen ajan ”23h”. Tarkkaa kalenteripäivää tai pysyvää postausosoitetta ei vahvistettu. Otsikko on julkaisun aloitusvirke. Julkaisu jakaa EFJ:n 1.10.2026 päivätyn STT-uutisen.",
     "author": "Maja Sever",
     "author_role": "European Federation of Journalistsin puheenjohtaja",
@@ -55,7 +57,9 @@
     "seed": false,
     "link_verified": true,
     "discovered_by": "openai_web_search_agent",
-    "history_action": "NEW"
+    "history_action": "NEW",
+    "history_published_at": "2026-10-11T12:18:47+00:00",
+    "publication_time_status": "unknown"
   },
   {
     "id": "5ac6505251006593",
@@ -67,7 +71,7 @@
     "publisher": "Freek Staps",
     "country": "Alankomaat",
     "country_code": "NL",
-    "published_at": "2026-10-11T12:18:47+00:00",
+    "published_at": null,
     "date_note": "Indeksoitu profiilinäkymä näyttää suhteellisen ajan ”1 w”. Tarkkaa kalenteripäivää tai pysyvää postausosoitetta ei vahvistettu. Otsikko on oman saatteen lyhennetty aloitus.",
     "author": "Freek Staps",
     "author_role": "ANP:n päätoimittaja",
@@ -84,7 +88,9 @@
     "seed": false,
     "link_verified": true,
     "discovered_by": "openai_web_search_agent",
-    "history_action": "NEW"
+    "history_action": "NEW",
+    "history_published_at": "2026-10-11T12:18:47+00:00",
+    "publication_time_status": "unknown"
   },
   {
     "id": "cc4692cbcf84cf98",
@@ -96,7 +102,7 @@
     "publisher": "Lisa Abrahamsson; julkaisu näkyvissä Freek Stapsin LinkedIn-profiilin reaktionäkymässä",
     "country": "Ruotsi",
     "country_code": "SE",
-    "published_at": "2026-10-11T12:18:47+00:00",
+    "published_at": null,
     "date_note": "Indeksoitu näkymä näyttää suhteellisen ajan ”1 d”. Tarkkaa kalenteripäivää tai pysyvää postausosoitetta ei vahvistettu. Teksti käsittelee Tukholman MINDS-tapaamisen yhteydessä järjestettyä pohjoismaista kokousta. Otsikko on aloitusvirkkeen lyhennetty alku.",
     "author": "Lisa Abrahamsson",
     "author_role": "TT Nyhetsbyrånin uutistoimituksen johtaja",
@@ -113,7 +119,9 @@
     "seed": false,
     "link_verified": true,
     "discovered_by": "openai_web_search_agent",
-    "history_action": "NEW"
+    "history_action": "NEW",
+    "history_published_at": "2026-10-11T12:18:47+00:00",
+    "publication_time_status": "unknown"
   },
   {
     "id": "817496fa7555d872",
@@ -125,7 +133,7 @@
     "publisher": "Guido van Nispen; julkaisu näkyvissä LinkedInin suositeltujen julkaisujen näkymässä",
     "country": "Alankomaat",
     "country_code": "NL",
-    "published_at": "2026-10-11T12:03:19+00:00",
+    "published_at": null,
     "date_note": "Avattu LinkedIn-näkymä näyttää suhteellisen ajan ”1w”. Tarkkaa kalenteripäivää ei vahvistettu. Otsikko on postauksen aloitusvirkkeen lyhennetty alku. URL johtaa Vandendriesschen postaukseen, jonka More Relevant Posts -osiossa van Nispenin erillinen teksti näkyy kokonaisena.",
     "author": "Guido van Nispen",
     "author_role": "ANP:n entinen toimitusjohtaja",
@@ -142,7 +150,9 @@
     "seed": false,
     "link_verified": true,
     "discovered_by": "openai_web_search_agent",
-    "history_action": "NEW"
+    "history_action": "NEW",
+    "history_published_at": "2026-10-11T12:03:19+00:00",
+    "publication_time_status": "unknown"
   },
   {
     "id": "bd03e61eebde76d9",
@@ -183,7 +193,7 @@
     "publisher": "Kris Boudt; julkaisu näkyvissä Clive Marshallin LinkedIn-profiilin jakonäkymässä",
     "country": "Belgia",
     "country_code": "BE",
-    "published_at": "2026-10-11T11:38:40+00:00",
+    "published_at": null,
     "date_note": "Indeksoitu LinkedIn-näkymä näyttää Boudtin julkaisulle suhteellisen ajan ”2d”. Tarkkaa kalenteripäivää ei vahvistettu. Otsikko on julkaisun aloitusvirkkeen lyhennetty alku. URL ei ole Boudtin postauksen pysyvä osoite.",
     "author": "Kris Boudt",
     "author_role": "Rahoituksen ja ekonometrian professori; Gentin yliopisto ja Vrije Universiteit Brussel",
@@ -200,7 +210,9 @@
     "seed": false,
     "link_verified": true,
     "discovered_by": "openai_web_search_agent",
-    "history_action": "NEW"
+    "history_action": "NEW",
+    "history_published_at": "2026-10-11T11:38:40+00:00",
+    "publication_time_status": "unknown"
   },
   {
     "id": "f81d037b99c1d601",
@@ -212,7 +224,7 @@
     "publisher": "K-013",
     "country": "Serbia",
     "country_code": "RS",
-    "published_at": "2026-10-11T11:38:40+00:00",
+    "published_at": null,
     "date_note": "Hakupalvelun palauttama sivuston listaus näyttää 3.10.2026 klo 23.32. Artikkelin indeksoitu näkymä näyttää vain suhteellisen ajan; aikavyöhykettä ja absoluuttista päiväystä ei vahvistettu artikkelisivulta.",
     "author": null,
     "author_role": null,
@@ -229,7 +241,9 @@
     "seed": false,
     "link_verified": true,
     "discovered_by": "openai_web_search_agent",
-    "history_action": "NEW_SYNDICATION"
+    "history_action": "NEW_SYNDICATION",
+    "history_published_at": "2026-10-11T11:38:40+00:00",
+    "publication_time_status": "unknown"
   },
   {
     "id": "4ca0c1c907aad309",
@@ -241,7 +255,7 @@
     "publisher": "Patrick Lacroix; julkaisu näkyvissä LinkedInin suositeltujen julkaisujen näkymässä",
     "country": "Belgia",
     "country_code": "BE",
-    "published_at": "2026-10-11T11:03:26+00:00",
+    "published_at": null,
     "date_note": "LinkedIn-näkymässä Lacroixin julkaisun kohdalla näkyi ”6d Edited”. Tarkkaa kalenteripäivää ei vahvistettu. Otsikko on hänen tekstinsä aloitusvirke. URL johtaa Vandendriesschen postaukseen, jonka More Relevant Posts -osiossa Lacroixin erillinen julkaisu näkyi kokonaisena.",
     "author": "Patrick Lacroix",
     "author_role": "Belga News Agencyn toimitusjohtaja",
@@ -258,7 +272,9 @@
     "seed": false,
     "link_verified": true,
     "discovered_by": "openai_web_search_agent",
-    "history_action": "NEW"
+    "history_action": "NEW",
+    "history_published_at": "2026-10-11T11:03:26+00:00",
+    "publication_time_status": "unknown"
   },
   {
     "id": "abb045a39cd786b6",
@@ -270,7 +286,7 @@
     "publisher": "Martha Riemsma",
     "country": "Alankomaat",
     "country_code": "NL",
-    "published_at": "2026-10-11T04:50:22+00:00",
+    "published_at": null,
     "date_note": "LinkedInin avattu sivu näyttää suhteellisen ajan ”1 w”. Tarkkaa kalenteripäivää ei vahvistettu. Otsikko on jaetun Medier24-linkin otsikko.",
     "author": "Martha Riemsma",
     "author_role": "ANP:n toimitusjohtaja",
@@ -287,7 +303,9 @@
     "seed": false,
     "link_verified": true,
     "discovered_by": "openai_web_search_agent",
-    "history_action": "NEW"
+    "history_action": "NEW",
+    "history_published_at": "2026-10-11T04:50:22+00:00",
+    "publication_time_status": "unknown"
   },
   {
     "id": "511f95ce4e0ba03c",
@@ -299,7 +317,7 @@
     "publisher": "Wolfgang Nedomansky; julkaisu MINDS Internationalin LinkedIn-sivun jakonäkymässä",
     "country": "Kansainvälinen / Saksa",
     "country_code": "DE",
-    "published_at": "2026-10-11T04:50:22+00:00",
+    "published_at": null,
     "date_note": "MINDSin yrityssivulla alkuperäisen kirjoittajan julkaisun yhteydessä näkyy ”1d Edited”. Tarkkaa julkaisuhetkeä tai postauksen pysyvää osoitetta ei vahvistettu. Otsikkona postauksen aloituskysymys. Maa viittaa MINDSin sivulla ilmoitettuun päätoimipaikkaan, ei kirjoittajan kansalaisuuteen.",
     "author": "Wolfgang Nedomansky",
     "author_role": "MINDS Internationaliin liittyvä toimija; tarkkaa ajantasaista tehtävänimikettä ei vahvistettu",
@@ -319,7 +337,9 @@
     "history_action": "NEW",
     "history_summary_fi": "Nedomansky kuvaa STT:n mahdollista katoamista menetykseksi sekä suomalaiselle journalismille että Euroopan mediakentälle. Hän pitää riippumatonta uutistoimistoa kriittisenä tietoinfrastruktuurina ja vetoaa Sanomaan, suomalaisiin medioihin, Suomen hallitukseen, Euroopan komissioon ja Natoon tilanteen laajempien vaikutusten tunnistamiseksi. MINDS International on jakanut hänen kirjoituksensa. ([linkedin.com](https://www.linkedin.com/company/minds-international))",
     "last_enriched_at": "2026-10-11T11:56:07+00:00",
-    "history_update_note": "Sama historiassa tunnettu STT-vetoomus; uusi alkuperäislähde vahvistaa aiemmin avoimeksi jääneen tehtävänimikkeen."
+    "history_update_note": "Sama historiassa tunnettu STT-vetoomus; uusi alkuperäislähde vahvistaa aiemmin avoimeksi jääneen tehtävänimikkeen.",
+    "history_published_at": "2026-10-11T04:50:22+00:00",
+    "publication_time_status": "unknown"
   },
   {
     "id": "7b1930a38613ef91",
@@ -331,7 +351,7 @@
     "publisher": "Christina Dorthellinger Nygaard",
     "country": "Norja",
     "country_code": "NO",
-    "published_at": "2026-10-11T04:50:22+00:00",
+    "published_at": null,
     "date_note": "LinkedIn näyttää suhteellisen ajan ”1u Redigert”. Tarkkaa kalenteripäivää ei vahvistettu. Otsikko on jaetun Medier24-linkin otsikko.",
     "author": "Christina Dorthellinger Nygaard",
     "author_role": "NTB Nyheter -toiminnan johtaja ja uutis- sekä kuvatoimituksen yhteinen johtaja",
@@ -348,7 +368,9 @@
     "seed": false,
     "link_verified": true,
     "discovered_by": "openai_web_search_agent",
-    "history_action": "NEW"
+    "history_action": "NEW",
+    "history_published_at": "2026-10-11T04:50:22+00:00",
+    "publication_time_status": "unknown"
   },
   {
     "id": "hist-40-9fcc71c7",
@@ -399,7 +421,7 @@
     "publisher": "Nicolas MARIOTTE",
     "country": "Ranska",
     "country_code": "FR",
-    "published_at": "2026-10-11T04:41:02+00:00",
+    "published_at": null,
     "date_note": "LinkedIn näyttää suhteellisen ajan ”1 sem.”. Tarkkaa päivämäärää ei vahvistettu. Otsikko on jaetun Yle-linkin tunnisteotsikko.",
     "author": "Nicolas Mariotte",
     "author_role": null,
@@ -416,7 +438,9 @@
     "seed": false,
     "link_verified": true,
     "discovered_by": "openai_web_search_agent",
-    "history_action": "NEW"
+    "history_action": "NEW",
+    "history_published_at": "2026-10-11T04:41:02+00:00",
+    "publication_time_status": "unknown"
   },
   {
     "id": "hist-16-9b171160",
@@ -498,7 +522,7 @@
     "publisher": "Alexandru Ion Giboi",
     "country": "Sveitsi / eurooppalainen",
     "country_code": "CH",
-    "published_at": "2026-10-11T04:27:27+00:00",
+    "published_at": null,
     "date_note": "LinkedIn näyttää suhteellisen ajan ja muokkausmerkinnän. Tarkkaa julkaisuhetkeä ei vahvistettu; sisältö reagoi 30.9.2026 ilmoitettuun sulkemisuhkaan.",
     "author": "Alexandru Ion Giboi",
     "author_role": "EANAn pääsihteeri",
@@ -514,7 +538,9 @@
     "first_seen": "2026-10-11T04:27:27+00:00",
     "seed": false,
     "link_verified": true,
-    "discovered_by": "openai_web_search_agent"
+    "discovered_by": "openai_web_search_agent",
+    "history_published_at": "2026-10-11T04:27:27+00:00",
+    "publication_time_status": "unknown"
   },
   {
     "id": "f55035387201ca10",
@@ -526,7 +552,7 @@
     "publisher": "Jaroslav Kábele",
     "country": "Tšekki",
     "country_code": "CZ",
-    "published_at": "2026-10-11T04:27:27+00:00",
+    "published_at": null,
     "date_note": "Otsikko on LinkedInin näyttämä tunnisteotsikko. Julkaisussa näkyy suhteellinen aika ja muokkausmerkintä, ei vahvistettua kalenteripäivää.",
     "author": "Jaroslav Kábele",
     "author_role": "ČTK:n pääjohtaja",
@@ -542,7 +568,9 @@
     "first_seen": "2026-10-11T04:27:27+00:00",
     "seed": false,
     "link_verified": true,
-    "discovered_by": "openai_web_search_agent"
+    "discovered_by": "openai_web_search_agent",
+    "history_published_at": "2026-10-11T04:27:27+00:00",
+    "publication_time_status": "unknown"
   },
   {
     "id": "ca1be71d6bc21607",
@@ -554,7 +582,7 @@
     "publisher": "Freek Staps",
     "country": "Alankomaat",
     "country_code": "NL",
-    "published_at": "2026-10-11T04:27:27+00:00",
+    "published_at": null,
     "date_note": "Otsikkona kirjoittajan oma lyhyt saate. Tarkkaa päivämäärää ei vahvistettu.",
     "author": "Freek Staps",
     "author_role": "ANP:n päätoimittaja",
@@ -570,7 +598,9 @@
     "first_seen": "2026-10-11T04:27:27+00:00",
     "seed": false,
     "link_verified": true,
-    "discovered_by": "openai_web_search_agent"
+    "discovered_by": "openai_web_search_agent",
+    "history_published_at": "2026-10-11T04:27:27+00:00",
+    "publication_time_status": "unknown"
   },
   {
     "id": "a295eddb08bd430a",
