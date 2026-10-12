@@ -366,7 +366,7 @@
     "agency": null,
     "type": "COMMENT",
     "importance": 4,
-    "summary_fi": "Scherer ilmaisee surunsa STT:n tilanteesta ja jakaa Tina Mari Flemin laajan kannanoton uutistoimistojen merkityksestä, yhteistyöstä ja kansallisesta varautumisesta. Hän käyttää saatteessaan sulkemista tarkoittavaa ilmaisua, vaikka jaettu teksti käsittelee vielä sulkemisuhkaa. ([fr.linkedin.com](https://fr.linkedin.com/posts/ericscherer_snart-kan-norden-st%C3%A5-uten-et-finsk-nasjonalt-activity-7511084883331461121-C_HA))",
+    "summary_fi": "Schererin tunnettu julkaisu sisältää laajan oman analyysin, ei vain saatetta Tina Mari Flemin tekstille. Hän rinnastaa hävittäjähankinnat riippumattoman tiedonvälityksen heikentämiseen ja kuvaa uutistoimistoa demokratian yhteisen faktapohjan ylläpitäjäksi. Hän käsittelee alueellisten medioiden riippuvuutta STT:stä, julkisen tuen valmistelun keskeyttämistä sekä varmennetun uutistuotannon merkitystä Venäjän vaikuttamisen ja tekoälyn aikakaudella. Hän puhuu nimenomaisesti toiminnan mahdollisesta päättymisestä maaliskuussa 2027, ei vahvistetusta sulkemispäätöksestä. Muut vertailuväitteet ovat kirjoittajan esittämiä, eivät tässä erikseen varmennettuja. ([fr.linkedin.com](https://fr.linkedin.com/posts/ericscherer_finnish-news-agency-stt-faces-shocking-activity-7513308449401896960-kXKw))",
     "first_seen": "2026-10-08T12:00:00+00:00",
     "seed": true,
     "link_verified": true,
@@ -384,10 +384,10 @@
     "direct_stt_reference": true,
     "confidence": 1.0,
     "history_summary_fi": "Scherer rinnastaa STT:n lakkautusuhan Suomen informaatioturvallisuuden heikentämiseen: F-35-hävittäjiin investoiva Venäjän rajanaapuri ei saisi luopua luotettavasta uutisinfrastruktuurista. Hän arvostelee Sanoman päätöstä ja valtion tukiratkaisua.",
-    "reason_fi": "Kirjoittajan oma saate nimeää STT:n. Palautetaan uutena ranskalaisena somekannanottona, ei Flemin tunnetun mielipidekirjoituksen uutena syndikointijulkaisuna. Kirjoittajan ajantasaista tehtävänimikettä ei vahvistettu. ([fr.linkedin.com](https://fr.linkedin.com/posts/ericscherer_snart-kan-norden-st%C3%A5-uten-et-finsk-nasjonalt-activity-7511084883331461121-C_HA))",
-    "last_enriched_at": "2026-10-11T12:28:06+00:00",
+    "reason_fi": "Historiassa olevan postausosoitteen alkuperäisteksti avautui. Se vahvistaa oman pitkän STT-analyysin ja korjaa historiatiivistelmän, joka kuvasi julkaisua Flemin kannanoton jakamiseksi ja sulkemista varmana esittäväksi saatteeksi. Historiassa mainittu Flemin tekstin jakamiseen liittyvä toinen osoite on erillinen julkaisu. Päivitys koskee jo tallennetun F-35-otsikkoisen havainnon sisältöä, ei uutta kannanottoa. ([fr.linkedin.com](https://fr.linkedin.com/posts/ericscherer_finnish-news-agency-stt-faces-shocking-activity-7513308449401896960-kXKw))",
+    "last_enriched_at": "2026-10-12T03:41:42+00:00",
     "discovered_by": "seed_backfill",
-    "history_update_note": "Semanttinen duplikaatti yhdistettiin aiempaan havaintoon."
+    "history_update_note": "Sama kirjoittaja, sama F-35-aloitus ja sama historiassa tallennettu postausosoite. Alkuperäisteksti korjaa olennaisesti tunnetun havainnon sisältökuvausta."
   },
   {
     "id": "a6c891d4452bf146",
