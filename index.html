@@ -168,7 +168,7 @@ function baselineCoverage(items){
 }
 
 function esc(v=''){return String(v).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
-function dt(v){const d=new Date(v);return Number.isNaN(d.getTime())?null:d}
+function dt(v){if(v===null||v===undefined||v==='')return null;const d=new Date(v);return Number.isNaN(d.getTime())?null:d}
 function fmt(v,withTime=true){const d=dt(v);if(!d)return'–';return new Intl.DateTimeFormat('fi-FI',withTime?{dateStyle:'medium',timeStyle:'short'}:{dateStyle:'medium'}).format(d)}
 function freshTime(a){return dt(a.first_seen)||dt(a.published_at)||new Date(0)}
 function pubTime(a){return dt(a.published_at)||new Date(0)}
@@ -212,7 +212,8 @@ function updateHeader(){
   $('#watchDot').className='dot '+(healthy?'live':'warn');
   $('#watchLabel').textContent=healthy?'Automaattiseuranta päällä':'Seurannan tila tarkistettava';
   const base=Number(state.status.baseline_coverage||baselineCoverage(a));
-  $('#watchTime').textContent='Viimeisin agenttiajo: '+(last?fmt(last):'–')+' · lähtöaineisto '+base+'/43';
+  const repaired=Number(state.status.uncertain_publication_dates_fixed||0);
+  $('#watchTime').textContent='Viimeisin agenttiajo: '+(last?fmt(last):'–')+' · lähtöaineisto '+base+'/43'+(repaired?` · päiväyskorjauksia ${repaired}`:'');
   $('#briefTitle').textContent=lastRun?`${lastRun} aidosti uutta havaintoa viime agenttiajossa`:'Ei uusia havaintoja viime agenttiajossa';
   $('#briefText').textContent=state.status.agent_summary_fi||`Seurannassa on ${a.length} havaintoa ${countries.size} maasta.`;
 }
@@ -240,7 +241,7 @@ function renderLatest(items){
     .filter(a=>{
       const found=dt(a.first_seen);
       const published=dt(a.published_at);
-      return found && published && hours(a.first_seen)<=24 && hours(a.published_at)>24;
+      return found && hours(a.first_seen)<=24 && (!published || hours(a.published_at)>24);
     })
     .sort((a,b)=>freshTime(b)-freshTime(a))
     .slice(0,15);
@@ -254,7 +255,7 @@ function renderLatest(items){
     : `<div class="section-head"><h2>Merkittävimmät uudet kannanotot</h2><span>Löytöaika</span></div><div class="empty">Ei uusia merkittäviä kannanottoja viimeisen 24 tunnin aikana.</div>`;
 
   const backfillSection = backfilled.length
-    ? renderList('Takautuvasti löydetyt',backfilled,`${backfilled.length} vanhempaa julkaisua, jotka agentti löysi vasta viimeisen 24 tunnin aikana`)
+    ? renderList('Takautuvasti / epävarmalla päiväyksellä löydetyt',backfilled,`${backfilled.length} vanhempaa tai tarkalta julkaisupäivältään epävarmaa havaintoa, jotka agentti löysi viimeisen 24 tunnin aikana`)
     : '';
 
   return publishedSection
