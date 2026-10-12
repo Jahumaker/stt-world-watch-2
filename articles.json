@@ -657,7 +657,7 @@
     "agency": "EANA",
     "type": "COMMENT",
     "importance": 5,
-    "summary_fi": "Giboi tukee Tina Mari Flemin kannanottoa ja korostaa STT:n vaikeuksien vaikuttavan koko yhteiskuntaan Euroopan vaikeassa geopoliittisessa tilanteessa. Hän vetoaa STT:n tulevaisuuteen vaikuttaviin tahoihin, jotta nämä tarkastelisivat tilannetta talouslukuja laajemmin, ja nostaa esiin luotettavan tiedon merkityksen tekoälyn aikakaudella. ([linkedin.com](https://www.linkedin.com/posts/alexgiboi_snart-kan-norden-st%C3%A5-uten-et-finsk-nasjonalt-activity-7511137499256242176-UK47))",
+    "summary_fi": "Tunnetulle Giboin kannanotolle vahvistui suora alkuperäisen LinkedIn-postauksen osoite. Hän tukee Flemin näkemystä, korostaa STT:n yhteiskunnallista merkitystä vaikeassa geopoliittisessa tilanteessa ja kehottaa tulevaisuuteen vaikuttavia tahoja katsomaan talouslukuja laajemmin. Sisältö ei ole uusi kannanotto. ([linkedin.com](https://www.linkedin.com/posts/alexgiboi_snart-kan-norden-st%C3%A5-uten-et-finsk-nasjonalt-activity-7511137499256242176-UK47))",
     "first_seen": "2026-10-02T12:00:00+00:00",
     "seed": true,
     "link_verified": true,
@@ -673,10 +673,10 @@
     "direct_stt_reference": true,
     "confidence": 1.0,
     "history_summary_fi": "EANAn pääsihteerin STT:tä tukeva kannanotto NMC:n artikkelin yhteydessä; ei erillinen uutisjulkaisu.",
-    "reason_fi": "Oma kommentoitu jako nimeää STT:n ja sen johdon. Giboin asema EANAn pääsihteerinä vahvistuu myös NMC:n artikkelista. ([linkedin.com](https://www.linkedin.com/posts/alexgiboi_snart-kan-norden-st%C3%A5-uten-et-finsk-nasjonalt-activity-7511137499256242176-UK47))",
-    "last_enriched_at": "2026-10-12T10:47:23+00:00",
+    "reason_fi": "Historiassa havainnon URL-kenttä johtaa NMC:n artikkeliin, vaikka kyseessä on Giboin LinkedIn-kannanotto. Nyt avattu suora postaus vahvistaa kirjoittajan, oman saatteen ja jaetun Flemin tekstin. Päivitys korjaa lähdeosoitteen ja erottaa postauksen vahvistamattoman julkaisuajan NMC-artikkelin päiväyksestä. Giboin EANA-tehtävä vahvistuu NMC:n julkaisusta. ([linkedin.com](https://www.linkedin.com/posts/alexgiboi_snart-kan-norden-st%C3%A5-uten-et-finsk-nasjonalt-activity-7511137499256242176-UK47))",
+    "last_enriched_at": "2026-10-12T12:30:13+00:00",
     "discovered_by": "seed_backfill",
-    "history_update_note": "Semanttinen duplikaatti yhdistettiin aiempaan havaintoon."
+    "history_update_note": "Sama Flemin tekstiä kommentoiva Giboin kannanotto kuin historiassa; suora alkuperäisosoite korvaa välillisen NMC-artikkelilinkin. Uutta erillistä lausuntoa ei löytynyt."
   },
   {
     "id": "hist-29-3b54fbce",
@@ -2357,5 +2357,35 @@
     "discovered_by": "openai_web_search_agent",
     "history_published_at": "2026-10-11T04:27:27+00:00",
     "publication_time_status": "unknown"
+  },
+  {
+    "id": "023a67f6c49f387f",
+    "cluster_id": "agent-10e96cf51a3c",
+    "title": "I share every word my colleague in Norway is writing.",
+    "title_fi": "Yhdyn jokaiseen norjalaisen kollegani sanaan.",
+    "url": "https://linkedin.com/posts/alexgiboi_snart-kan-norden-st%C3%A5-uten-et-finsk-nasjonalt-activity-7511137499256242176-UK47",
+    "domain": "linkedin.com",
+    "publisher": "Jacob Kwon; julkaisu näkyvissä LinkedInin suositeltujen julkaisujen näkymässä",
+    "country": "Tanska",
+    "country_code": "DK",
+    "published_at": null,
+    "date_note": "Avattu LinkedIn-näkymä näyttää Kwonin julkaisulle suhteellisen ajan ”1w”. Tarkkaa kalenteripäivää ei vahvistettu. Otsikko on oman saatteen aloitusvirke. URL johtaa Giboin postaukseen, jonka suositelluissa julkaisuissa Kwonin erillinen saate ja hänen jakamansa Tina Mari Flemin STT-teksti näkyvät.",
+    "publication_time_status": "unknown",
+    "author": "Jacob Kwon",
+    "author_role": "Ritzaus Bureaun toimitusjohtaja ja päätoimittaja",
+    "agency": "Ritzau",
+    "platform": "LinkedIn",
+    "type": "SOCIAL_POST",
+    "match_class": "CONFIRMED",
+    "direct_stt_reference": false,
+    "confidence": 0.98,
+    "importance": 5,
+    "summary_fi": "Kwon tukee Tina Mari Flemin STT-kannanottoa ja varoittaa Suomen sekä suomalaismedian joutuvan vaikeaan tilanteeseen, jos kansallinen uutistoimisto katoaa nykyisessä muodossaan. Hän liittää huolen disinformaatioon ja itäisen naapurimaan aiheuttamaan turvallisuusuhkaan. Hän sanoo Ritzaun tilanteen olevan erilainen mutta korostaa, ettei luotettavaa ja varmennettua tietoa saa pitää itsestäänselvyytenä. Kyse on hänen omasta saatteestaan, ei erikseen varmennetusta Ritzaun organisaatiolausunnosta. ([linkedin.com](https://www.linkedin.com/posts/alexgiboi_snart-kan-norden-st%C3%A5-uten-et-finsk-nasjonalt-activity-7511137499256242176-UK47))",
+    "reason_fi": "Historiassa on Ritzaun Anders Kern Bojen kannanotto mutta ei Kwonin tätä omaa julkaisua. Kwonin saate ei nimeä STT:tä, mutta saman julkaisun välittömästi jakama Flemin teksti nimeää STT:n ja juuri seurattavan sulkemisuhan, joten yhteys on yksiselitteinen. LinkedIn-näkymä erottaa Kwonin alkuperäiseksi kirjoittajaksi; toinen indeksoitu profiilinäkymä vahvistaa saman attribuution. Ritzaun oma yhteystietosivu vahvistaa hänen toimitusjohtaja- ja päätoimittaja-asemansa. Pysyvä postausosoite kannattaa tallentaa ennen jatkokäyttöä. ([linkedin.com](https://www.linkedin.com/posts/alexgiboi_snart-kan-norden-st%C3%A5-uten-et-finsk-nasjonalt-activity-7511137499256242176-UK47))",
+    "first_seen": "2026-10-12T12:30:13+00:00",
+    "seed": false,
+    "link_verified": true,
+    "discovered_by": "openai_web_search_agent",
+    "history_action": "NEW"
   }
 ]
