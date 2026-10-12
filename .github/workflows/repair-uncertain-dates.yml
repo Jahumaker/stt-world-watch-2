@@ -1,0 +1,83 @@
+name: Repair uncertain publication dates
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/repair-uncertain-dates.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Repair synthetic publication timestamps
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, re
+          from datetime import datetime, timezone
+          from pathlib import Path
+
+          p = Path('articles.json')
+          items = json.loads(p.read_text(encoding='utf-8'))
+
+          def dt(v):
+              if not v:
+                  return None
+              try:
+                  return datetime.fromisoformat(str(v).replace('Z', '+00:00')).astimezone(timezone.utc)
+              except Exception:
+                  return None
+
+          def uncertain(note):
+              n = (note or '').lower()
+              phrases = (
+                  'suhteellis', 'tarkkaa kalenteripäiv', 'tarkkaa päivämäär',
+                  'absoluuttista päivämäär', 'ei vahvistettu', 'ei voitu vahvistaa',
+                  'relative time', 'exact date not verified'
+              )
+              if any(x in n for x in phrases):
+                  return True
+              return bool(re.search(r'(^|\\s)\\d+\\s*(h|hr|hrs|d|day|days|w|wk|week|weeks)(\\s|$)', n, re.I))
+
+          fixed = 0
+          for a in items:
+              if a.get('seed') or not uncertain(a.get('date_note')):
+                  continue
+              pub = dt(a.get('published_at'))
+              seen = dt(a.get('first_seen'))
+              if pub and seen and abs((pub-seen).total_seconds()) <= 7200:
+                  a.setdefault('history_published_at', a.get('published_at'))
+                  a['published_at'] = None
+                  a['publication_time_status'] = 'unknown'
+                  fixed += 1
+              elif not pub:
+                  a['publication_time_status'] = 'unknown'
+
+          if fixed:
+              p.write_text(json.dumps(items, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+              sp = Path('status.json')
+              status = json.loads(sp.read_text(encoding='utf-8')) if sp.exists() else {}
+              status['uncertain_publication_dates_fixed'] = fixed
+              sp.write_text(json.dumps(status, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+          print(f'Repaired {fixed} uncertain publication timestamps')
+          PY
+
+      - name: Commit repairs if needed
+        shell: bash
+        run: |
+          git config user.name "stt-world-watch-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add articles.json status.json
+          if git diff --cached --quiet; then
+            echo "No date repairs needed."
+          else
+            git commit -m "Repair uncertain publication timestamps"
+            git push
+          fi
