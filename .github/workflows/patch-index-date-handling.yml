@@ -1,0 +1,58 @@
+name: Patch index date handling
+
+on:
+  push:
+    paths:
+      - '.github/workflows/patch-index-date-handling.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Patch index.html
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+          original = s
+
+          s = s.replace(
+              "function dt(v){const d=new Date(v);return Number.isNaN(d.getTime())?null:d}",
+              "function dt(v){if(v===null||v===undefined||v==='')return null;const d=new Date(v);return Number.isNaN(d.getTime())?null:d}"
+          )
+
+          s = s.replace(
+              "  $('#watchTime').textContent='Viimeisin agenttiajo: '+(last?fmt(last):'–')+' · lähtöaineisto '+base+'/43';",
+              "  const repaired=Number(state.status.uncertain_publication_dates_fixed||0);\n  $('#watchTime').textContent='Viimeisin agenttiajo: '+(last?fmt(last):'–')+' · lähtöaineisto '+base+'/43'+(repaired?` · päiväyskorjauksia ${repaired}`:'');"
+          )
+
+          s = s.replace(
+              "      return found && published && hours(a.first_seen)<=24 && hours(a.published_at)>24;",
+              "      return found && hours(a.first_seen)<=24 && (!published || hours(a.published_at)>24);"
+          )
+
+          s = s.replace(
+              "? renderList('Takautuvasti löydetyt',backfilled,`${backfilled.length} vanhempaa julkaisua, jotka agentti löysi vasta viimeisen 24 tunnin aikana`)",
+              "? renderList('Takautuvasti / epävarmalla päiväyksellä löydetyt',backfilled,`${backfilled.length} vanhempaa tai tarkalta julkaisupäivältään epävarmaa havaintoa, jotka agentti löysi viimeisen 24 tunnin aikana`)"
+          )
+
+          if s == original:
+              raise SystemExit('No expected index patterns changed; refusing silent no-op')
+
+          p.write_text(s, encoding='utf-8')
+          PY
+      - name: Commit patch
+        shell: bash
+        run: |
+          git config user.name "stt-world-watch-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add index.html
+          git commit -m "Fix display of uncertain publication dates"
+          git push
