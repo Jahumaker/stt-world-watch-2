@@ -180,6 +180,15 @@ Esimerkki: jos historiassa on "Éric Scherer / entinen AFP:n strategiajohtaja" i
 varmennettua LinkedIn-linkkiä ja löydät hänen saman STT-kannanottonsa suoralla
 LinkedIn-URL:lla, se on UPDATE_EXISTING, ei NEW.
 
+PÄIVÄMÄÄRÄT
+- published_at saa sisältää vain lähteestä tai luotettavasta hakutuloksesta vahvistetun
+  kalenteripäivän/-ajan.
+- Jos näkyvissä on vain suhteellinen aika kuten "23h", "1 d", "5d" tai "1 w", tai tekstissä
+  todetaan ettei tarkkaa päivää voitu vahvistaa, aseta published_at=null ja kirjoita
+  suhteellinen/epävarma tieto date_note-kenttään.
+- ÄLÄ koskaan käytä hakukierroksen nykyhetkeä published_at-arvona puuttuvan päivämäärän
+  korvikkeena. first_seen kertoo erikseen, milloin agentti löysi havainnon.
+
 Palauta tiivistelmät ja perustelut suomeksi. Otsikko säilytetään alkuperäiskielellä ja
 title_fi on suomenkielinen käännös. Älä käytä pitkiä suoria lainauksia.
 """.strip()
@@ -370,6 +379,74 @@ def parse_date(value):
         return datetime.fromisoformat(value.replace("Z", "+00:00")).astimezone(timezone.utc).isoformat(timespec="seconds")
     except Exception:
         return None
+
+
+def date_note_means_uncertain(note):
+    """
+    True when date_note explicitly says the exact calendar publication time is
+    unknown and only a relative/indexed age is available.
+    """
+    n = normalize_text(note or "")
+    if not n:
+        return False
+    phrases = (
+        "suhteellinen", "suhteellisen", "tarkkaa kalenteripaivaa",
+        "tarkkaa paivamaaraa", "absoluuttista paivamaaraa",
+        "ei vahvistettu", "ei voitu vahvistaa", "relative time",
+        "exact date not verified", "exact publication date"
+    )
+    if any(p in n for p in phrases):
+        return True
+    # Common indexed social-media age labels: 23h, 1 d, 5d, 1 w, etc.
+    return bool(re.search(r"(^|\s)\d+\s*(h|hr|hrs|d|day|days|w|wk|week|weeks)(\s|$)", n, re.I))
+
+
+def publication_time_is_reliable(item):
+    """
+    A publication timestamp is reliable only when we have a calendar timestamp
+    and the item's own date_note does not explicitly say it is merely relative
+    or unverified.
+    """
+    if not parse_date(item.get("published_at")):
+        return False
+    if date_note_means_uncertain(item.get("date_note")):
+        return False
+    return True
+
+
+def normalize_uncertain_publication_times(articles):
+    """
+    Repair early agent rows where the discovery timestamp was accidentally
+    stored as published_at while date_note admitted that the source only showed
+    a relative age. Baseline rows are untouched.
+    """
+    changed = 0
+    for item in articles:
+        if item.get("seed"):
+            continue
+        if not date_note_means_uncertain(item.get("date_note")):
+            continue
+
+        published = _dt(item.get("published_at"))
+        first_seen = _dt(item.get("first_seen"))
+
+        # Only clear obviously synthetic timestamps: equal/near first_seen.
+        if published and first_seen and abs((published - first_seen).total_seconds()) <= 7200:
+            item.setdefault("history_published_at", item.get("published_at"))
+            item["published_at"] = None
+            item["publication_time_status"] = "unknown"
+            changed += 1
+        elif not published:
+            if item.get("publication_time_status") != "unknown":
+                item["publication_time_status"] = "unknown"
+                changed += 1
+    return changed
+
+
+def reliable_raw_published_at(raw):
+    if date_note_means_uncertain(raw.get("date_note")):
+        return None
+    return parse_date(raw.get("published_at"))
 
 
 def find_existing_cluster(articles, same_as_url):
@@ -626,16 +703,22 @@ def merge_observation(existing, raw, exact_source=True, note=None):
         existing["title"] = new_title
         changed = True
 
-    # A newly verified exact date can replace an approximate seed date.
-    parsed = parse_date(raw.get("published_at"))
+    # A newly verified exact calendar date can replace an approximate seed date.
+    # Relative social-media ages are NOT exact dates and must never overwrite history.
+    parsed = reliable_raw_published_at(raw)
     if parsed and (existing.get("date_note") or not existing.get("published_at")):
         if existing.get("published_at") != parsed:
             existing["published_at"] = parsed
+            existing["publication_time_status"] = "verified"
             changed = True
         if existing.get("date_note"):
             existing.setdefault("history_date_note", existing.get("date_note"))
             existing["date_note"] = None
             changed = True
+    elif raw.get("date_note") and not existing.get("date_note") and not existing.get("published_at"):
+        existing["date_note"] = raw.get("date_note")
+        existing["publication_time_status"] = "unknown"
+        changed = True
 
     # These enrichments are useful even when the old seed row already existed.
     set_if_better("title_fi", raw.get("title_fi"))
@@ -763,7 +846,7 @@ def reconcile_existing_history(articles):
 
     return kept, merged_count
 
-def actions_summary(mode, result, added, updated, rejected, cleanup_merged, baseline_restored, out_of_scope_removed, baseline_count):
+def actions_summary(mode, result, added, updated, rejected, cleanup_merged, baseline_restored, out_of_scope_removed, baseline_count, uncertain_dates_fixed):
     path = os.environ.get("GITHUB_STEP_SUMMARY")
     if not path:
         return
@@ -777,6 +860,7 @@ def actions_summary(mode, result, added, updated, rejected, cleanup_merged, base
         f"- Historical baseline rows restored: **{baseline_restored}**",
         f"- Historical baseline integrity: **{baseline_count}/43**",
         f"- Pre-30.9.2026 noise rows removed: **{out_of_scope_removed}**",
+        f"- Uncertain publication timestamps repaired: **{uncertain_dates_fixed}**",
         f"- Old duplicate rows merged in cleanup: **{cleanup_merged}**",
         f"- Rejected/unverifiable candidates: **{len(rejected)}**",
         f"- Run time: **{now_iso()}**",
@@ -822,6 +906,10 @@ def main():
 
     # Clean duplicate agent rows, but never collapse two baseline rows.
     articles, cleanup_merged = reconcile_existing_history(articles)
+
+    # Repair old agent rows where discovery time was accidentally stored as
+    # publication time even though date_note explicitly said the date was only relative.
+    uncertain_dates_fixed = normalize_uncertain_publication_times(articles)
 
     # Cleanup must preserve all authoritative rows. If it does not, fail loudly:
     # otherwise the workflow would keep "restoring" the same rows on every run.
@@ -900,7 +988,7 @@ def main():
 
         # Hard scope boundary. A story/post published before the event started
         # is not an STT closure-threat observation, no matter how similar the theme.
-        raw_published = parse_date(raw.get("published_at"))
+        raw_published = reliable_raw_published_at(raw)
         raw_dt = _dt(raw_published) if raw_published else None
         if raw_dt and raw_dt < EVENT_START:
             rejected.append(
@@ -939,7 +1027,7 @@ def main():
             continue
 
         # NEW_SYNDICATION is new as a publication, but belongs to an existing cluster.
-        published = parse_date(raw.get("published_at"))
+        published = reliable_raw_published_at(raw)
         cluster_id = find_existing_cluster(articles, raw.get("same_as_url")) or make_cluster_id(raw)
         country = (raw.get("country") or "Tuntematon").strip()
         cc = raw.get("country_code") or COUNTRY_CODES.get(country)
@@ -961,8 +1049,9 @@ def main():
             "publisher": raw.get("publisher") or dom,
             "country": country,
             "country_code": cc,
-            "published_at": published or now_iso(),
-            "date_note": raw.get("date_note") if not published else None,
+            "published_at": published,
+            "date_note": raw.get("date_note"),
+            "publication_time_status": "verified" if published else "unknown",
             "author": raw.get("author"),
             "author_role": raw.get("author_role"),
             "agency": raw.get("agency"),
@@ -982,9 +1071,9 @@ def main():
         }
         added.append(article)
 
-    actions_summary(args.mode, result, added, updated, rejected, cleanup_merged, baseline_restored, len(removed_out_of_scope), baseline_count)
+    actions_summary(args.mode, result, added, updated, rejected, cleanup_merged, baseline_restored, len(removed_out_of_scope), baseline_count, uncertain_dates_fixed)
 
-    changed = bool(added or updated or cleanup_merged or baseline_restored or removed_out_of_scope)
+    changed = bool(added or updated or cleanup_merged or baseline_restored or removed_out_of_scope or uncertain_dates_fixed)
     if not changed:
         print("No genuinely new or enrichable items. Repository data left unchanged.")
         if rejected:
@@ -1017,6 +1106,7 @@ def main():
         "baseline_coverage": final_baseline_count,
         "baseline_missing_rows": final_missing,
         "out_of_scope_removed": len(removed_out_of_scope),
+        "uncertain_publication_dates_fixed": uncertain_dates_fixed,
         "source_count": len(sources),
         "error": None,
         "agent_mode": args.mode,
@@ -1032,7 +1122,8 @@ def main():
         f"Added {len(added)} genuinely new observations; "
         f"enriched {len(updated)} existing observations; "
         f"baseline restored {baseline_restored}; baseline {baseline_count}/43; "
-        f"removed {len(removed_out_of_scope)} pre-event rows; cleanup merged {cleanup_merged} old duplicate rows."
+        f"removed {len(removed_out_of_scope)} pre-event rows; repaired {uncertain_dates_fixed} uncertain publication timestamps; "
+        f"cleanup merged {cleanup_merged} old duplicate rows."
     )
     for a in added:
         print(f"+ {a['match_class']} {a['importance']}/5 {a['publisher']}: {a['title']}")
