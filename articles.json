@@ -1735,21 +1735,28 @@
     "agency": "NTB",
     "type": "COMMENT",
     "importance": 4,
-    "summary_fi": "NTB:n toimitusjohtaja ja päätoimittaja Tina Mari Flem arvioi STT:n mahdollisen alasajon heikentävän pohjoismaista uutis- ja varautumisinfrastruktuuria.",
+    "summary_fi": "Flem vastaa Lehmusjoen kysymykseen, onko Suomella varaa menettää STT. Hänen mukaansa menetystä eivät kestäisi Suomi, suomalaismedia eivätkä maailman alkuperäisjournalismin toimijat. Hän osoittaa samalla henkilökohtaisen tukensa STT:n kollegoille. Kommentti on lyhyt uusi tukiviesti, ei uusi laaja pelastussuunnitelma. ([linkedin.com](https://www.linkedin.com/posts/pihla-lehmusjoki-61212729_snart-kan-norden-st%C3%A5-uten-et-finsk-nasjonalt-activity-7511162270056611840-DvI3))",
     "first_seen": "2026-09-30T12:00:00+00:00",
     "seed": true,
     "link_verified": true,
     "link_status": "verified",
     "source_row": 12,
     "alternate_urls": [
-      "https://m24.no/debatt-finland-ntb/snart-kan-norden-sta-uten-et-finsk-nasjonalt-nyhetsbyra/955723"
+      "https://m24.no/debatt-finland-ntb/snart-kan-norden-sta-uten-et-finsk-nasjonalt-nyhetsbyra/955723",
+      "https://linkedin.com/posts/pihla-lehmusjoki-61212729_snart-kan-norden-st%C3%A5-uten-et-finsk-nasjonalt-activity-7511162270056611840-DvI3"
     ],
     "history_title": "Tina Mari Flem / Journalisten",
     "history_date_note": "30.9.",
     "history_summary_fi": "NTB:n toimitusjohtajan painava puheenvuoro: kansallisen uutistoimiston katoaminen heikentäisi luotettavaa tiedonvälitystä ja yhteiskunnan varautumista.",
-    "last_enriched_at": "2026-10-11T12:28:06+00:00",
+    "last_enriched_at": "2026-10-13T12:13:43+00:00",
     "discovered_by": "seed_backfill",
-    "history_update_note": "Semanttinen duplikaatti yhdistettiin aiempaan havaintoon."
+    "history_update_note": "Agentti vahvisti/rikasti aiemman havainnon.",
+    "author_role": "NTB:n toimitusjohtaja ja päätoimittaja; tehtävä vahvistettu NTB:n omalta henkilösivulta.",
+    "platform": "LinkedIn",
+    "match_class": "CONFIRMED",
+    "direct_stt_reference": false,
+    "confidence": 0.99,
+    "reason_fi": "Historiassa tunnetaan Flemin alkuperäinen kolumni ja sen jakaminen, mutta ei tätä Lehmusjoelle osoitettua erillistä vastausta. Kommentti ei nimeä STT:tä, mutta sen kohde on yksiselitteinen: emojulkaisu kysyy STT:n menettämisestä ja sisältää Flemin STT:tä käsittelevän tekstin. Kyse ei ole alkuperäisen kolumnin uudesta URL:sta. NTB:n oma henkilösivu vahvistaa kirjoittajan johtotehtävän. ([linkedin.com](https://www.linkedin.com/posts/pihla-lehmusjoki-61212729_snart-kan-norden-st%C3%A5-uten-et-finsk-nasjonalt-activity-7511162270056611840-DvI3))"
   },
   {
     "id": "99aeaf81310bbd81",
