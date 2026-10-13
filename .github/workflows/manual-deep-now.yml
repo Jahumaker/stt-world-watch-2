@@ -1,0 +1,43 @@
+name: Manual deep now
+
+on:
+  push:
+    paths:
+      - '.github/workflows/manual-deep-now.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: stt-world-watch-update
+  cancel-in-progress: false
+
+jobs:
+  deep:
+    runs-on: ubuntu-24.04
+    env:
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Run deep semantic web-search agent
+        run: python update_news.py --mode deep
+      - name: Commit only if data changed
+        shell: bash
+        run: |
+          git config user.name "stt-world-watch-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add articles.json status.json
+          if git diff --cached --quiet; then
+            echo "No new persistent data — nothing to commit."
+          else
+            git commit -m "Update STT World Watch data (manual deep)"
+            git push
+          fi
