@@ -83,7 +83,7 @@
     "agency": "Belga",
     "type": "COMMENT",
     "importance": 5,
-    "summary_fi": "Vandendriessche pitää STT:n sulkemisuhkaa varoituksena journalistisen perustiedon aliarvostamisesta. Hän korostaa, ettei tekoäly korvaa tapahtumapaikoilla työskenteleviä toimittajia ja faktantarkistusta. Suomen Venäjä-rajan ja hybridivaikuttamisen vuoksi hän näkee riippumattoman uutishankinnan myös kansallisen turvallisuuden kysymyksenä. ([linkedin.com](https://www.linkedin.com/posts/hans-vandendriessche-79b8862_journalism-media-ai-activity-7512047898424156160-bGhm))",
+    "summary_fi": "Vandendriessche tarkastelee STT:n sulkemisuhkaa alkuperäisen uutishankinnan aliarvostuksen ja riittämättömän korvaamisen seurauksena. Hän korostaa uutistoimistojen kenttätyön rahoitusta, alueellisten medioiden riippuvuutta yhteisestä aineistosta ja varmennetun raportoinnin merkitystä disinformaation torjunnassa. Hän ilmaisee tukensa STT:n kollegoille. Kyse on henkilökohtaisesta kannanotosta, ei varmennetusta Belgan organisaatiolausunnosta. ([fi.linkedin.com](https://fi.linkedin.com/in/fintmh?utm_source=openai))",
     "first_seen": "2026-10-03T12:00:00+00:00",
     "seed": true,
     "link_verified": true,
@@ -97,10 +97,13 @@
     "direct_stt_reference": true,
     "confidence": 1.0,
     "history_summary_fi": "Belgan päätoimittajan henkilökohtainen kannanotto: tekoäly ei korvaa toimittajien alkuperäistä tiedonhankintaa; riippumaton uutistoimisto on tärkeä myös informaatioturvallisuudelle.",
-    "reason_fi": "Suora STT-kannanotto alkuperäisen postauksen osoitteessa. Kirjoittajan päätoimittaja-asema on tarkistettu Belgan omalta sivulta. Postauksessa esitettyjä muita kansainvälisiä vertailuväitteitä ei ole tässä omaksuttu vahvistetuiksi tosiasioiksi. ([linkedin.com](https://www.linkedin.com/posts/hans-vandendriessche-79b8862_journalism-media-ai-activity-7512047898424156160-bGhm))",
-    "last_enriched_at": "2026-10-11T12:28:06+00:00",
+    "reason_fi": "Historiassa oleva hist-16-9b171160 alkaa sulkemisuhan herättämästä järkytyksestä ja painottaa tekoälyn rajoja sekä Suomen turvallisuustilannetta. Nyt löytynyt oma teksti alkaa ”Hear, hear!” ja rakentuu alkuperäisjournalismin rahoitusta, tiedotteiden kierrättämistä, alueellisia medioita ja disinformaatiota käsittelevistä erillisistä perusteluista. Sisällöllisesti kyse on toisesta kannanotosta, ei tunnetun tekstin paremmasta osoitteesta. Kirjoittajan nimi ja STT-maininnat näkyvät indeksoidussa lähteessä. Pysyvä postausosoite tulee täydentää ennen jatkokäyttöä. ([fi.linkedin.com](https://fi.linkedin.com/in/fintmh?utm_source=openai))",
+    "last_enriched_at": "2026-10-14T23:54:59+00:00",
     "discovered_by": "seed_backfill",
-    "history_update_note": "Semanttinen duplikaatti yhdistettiin aiempaan havaintoon."
+    "history_update_note": "Agentti vahvisti/rikasti aiemman havainnon.",
+    "alternate_urls": [
+      "https://fi.linkedin.com/in/fintmh"
+    ]
   },
   {
     "id": "hist-39-f66d42a7",
