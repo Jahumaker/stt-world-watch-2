@@ -2691,7 +2691,7 @@
     "domain": "nacloset.com",
     "publisher": "NAcloset",
     "country": "Ei vahvistettu",
-    "country_code": null,
+    "country_code": "PT",
     "published_at": null,
     "date_note": "Sivulla julkaisupäivä 16.10.2026. Kellonaikaa ei vahvistettu.",
     "publication_time_status": "unknown",
@@ -2704,12 +2704,18 @@
     "direct_stt_reference": true,
     "confidence": 0.94,
     "importance": 3,
-    "summary_fi": "Lusan kysymyksiin vastannut ministeriölähde tunnustaa STT:n mahdollisen sulkemisen aiheuttaman huolen mediapluralismista ja luotettavan tiedon saatavuudesta. Samalla lähde painottaa kysynnän muutosta ja omistajien vastuuta. Valtion omistusta ei pidetä toteuttamiskelpoisena ratkaisuna, eikä lähteen mukaan ole konkreettista ehdotusta, joka edellyttäisi keskusteluja Brysselin kanssa. Nämä ovat jutussa esitettyjä ministeriölähteen arvioita. ([nacloset.com](https://nacloset.com/blog/stt-pode-encerrar-levantando-preocupacoes-sobre-pluralismo-mediatico/))",
-    "reason_fi": "Päivätty julkaisu käsittelee suoraan STT:n sulkemisuhkaa ja sisältää historiasta puuttuvia ministeriön vastauksia valtionomistuksesta ja Bryssel-keskusteluista. Se on erillinen teksti saman päivän tukisummaa käsittelevästä Lusa-uutisesta: sivu linkittää tukiuutiseen erikseen. Luokitus perustuu näkyvään Lusa-attribuutioon. Alkuperäistä Lusa-osoitetta ja julkaisijan toimituksellista asemaa ei vahvistettu, mikä rajoittaa lähteen painoarvoa. ([nacloset.com](https://nacloset.com/blog/stt-pode-encerrar-levantando-preocupacoes-sobre-pluralismo-mediatico/))",
+    "summary_fi": "Notícias ao Minuto julkaisee Lusan ministeriöhaastatteluun perustuvan uutisen STT:n mahdollisen sulkemisen vaikutuksista mediapluralismiin ja luotettavan tiedon saatavuuteen. Ministeriölähde korostaa pienempien medioiden riippuvuutta STT:stä mutta katsoo kestävän ratkaisun edellyttävän elinkelpoista liiketoimintamallia ja omistajien sitoutumista. Valtionomistusta ei pidetä toteuttamiskelpoisena ratkaisuna. Kyse on historiassa tunnetun haastattelun levikistä, ei uudesta ministeriön kannanotosta. ([noticiasaominuto.com](https://www.noticiasaominuto.com/economia/3067929/stt-pode-encerrar-levantando-preocupacoes-sobre-pluralismo-mediatico))",
+    "reason_fi": "Julkaisupaikka puuttuu historiasta. Otsikko, aloitus, ministeriön vastaukset ja niiden järjestys vastaavat historiassa olevaa NAclosetin Lusa-julkaisua. Notícias ao Minuton sivu vahvistaa uutistoimistoattribuution ja täsmällisen julkaisupäivän. Kyse on saman uutistoimistotekstin uudesta jatkojulkaisuhavainnosta, ei sisällöllisesti uudesta uutisesta. ([noticiasaominuto.com](https://www.noticiasaominuto.com/economia/3067929/stt-pode-encerrar-levantando-preocupacoes-sobre-pluralismo-mediatico))",
     "first_seen": "2026-10-16T16:39:15+00:00",
     "seed": false,
     "link_verified": true,
     "discovered_by": "openai_web_search_agent",
-    "history_action": "NEW"
+    "history_action": "NEW",
+    "alternate_urls": [
+      "https://noticiasaominuto.com/economia/3067929/stt-pode-encerrar-levantando-preocupacoes-sobre-pluralismo-mediatico"
+    ],
+    "history_summary_fi": "Lusan kysymyksiin vastannut ministeriölähde tunnustaa STT:n mahdollisen sulkemisen aiheuttaman huolen mediapluralismista ja luotettavan tiedon saatavuudesta. Samalla lähde painottaa kysynnän muutosta ja omistajien vastuuta. Valtion omistusta ei pidetä toteuttamiskelpoisena ratkaisuna, eikä lähteen mukaan ole konkreettista ehdotusta, joka edellyttäisi keskusteluja Brysselin kanssa. Nämä ovat jutussa esitettyjä ministeriölähteen arvioita. ([nacloset.com](https://nacloset.com/blog/stt-pode-encerrar-levantando-preocupacoes-sobre-pluralismo-mediatico/))",
+    "last_enriched_at": "2026-10-16T23:35:43+00:00",
+    "history_update_note": "Sama Lusan ministeriöhaastatteluun perustuva pluralismiuutinen kuin NAclosetin 16.10.2026 julkaisu; uusi julkaisupaikka ja varmennettu Lusa-tekijämerkintä."
   }
 ]
