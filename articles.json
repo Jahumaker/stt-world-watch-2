@@ -2674,13 +2674,19 @@
     "direct_stt_reference": true,
     "confidence": 0.99,
     "importance": 4,
-    "summary_fi": "Lusan ministeriölähde arvioi mahdollisen valtionavun tarjoavan STT:lle vain väliaikaista vakautta. Pitkäaikainen ratkaisu edellyttäisi toiminnan uudistamista sekä omistajien ja asiakkaiden sitoutumista. Ministeriön mukaan omistajille ei ole asetettu määräaikaa eikä hallitus osallistu aktiivisesti neuvotteluihin. Otsikko antaa toteutuneesta tuesta vahvemman kuvan kuin leipäteksti, joka kertoo syyskuun lopulla keskeytetystä tukipaketista. ([noticiasaominuto.com](https://www.noticiasaominuto.com/economia/3067930/governo-finlandes-apoia-stt-com-1-05-milhoes-de-euros-para-reestruturacao))",
-    "reason_fi": "STT on jutun pääaihe. Teksti kertoo nimenomaisesti Lusan esittämistä kysymyksistä ja ministeriön vastauksista. Tämä erottaa sen historiassa tunnetusta 3.10.2026 Lusa/Executive Digest -uutisesta: kyseessä on uusi haastattelulähteinen jatkouutinen, ei saman tekstin uusi osoite. SYNDICATED kuvaa Notícias ao Minuton Lusa-julkaisua; NEW tarkoittaa historiasta puuttuvaa uutistekstiä. ([noticiasaominuto.com](https://www.noticiasaominuto.com/economia/3067930/governo-finlandes-apoia-stt-com-1-05-milhoes-de-euros-para-reestruturacao))",
+    "summary_fi": "NAcloset julkaisee Lusan uutisen, jossa liikenne- ja viestintäministeriön lähde arvioi mahdollisen valtionavun tarjoavan STT:lle vain väliaikaista vakautta. Kestävä ratkaisu edellyttäisi toiminnan uudistamista ja omistajien sekä asiakkaiden sitoutumista. Otsikko antaa toteutuneesta tuesta vahvemman kuvan kuin leipäteksti, joka kertoo tukipaketin keskeyttämisestä; otsikkoa ei omaksuta vahvistukseksi tuen myöntämisestä. ([nacloset.com](https://nacloset.com/blog/governo-finlandes-apoia-stt-com-105-milhoes-de-euros-para-reestruturacao/))",
+    "reason_fi": "NAclosetin tämä julkaisupaikka puuttuu historiasta. Otsikko, Lusa-attribuutio sekä ministeriön vastauksia käsittelevä sisältö vastaavat historiassa tunnettua Notícias ao Minuton uutista. Kyse on sen uudesta jatkojulkaisusta, ei uudesta haastattelusta tai kannanotosta. ([nacloset.com](https://nacloset.com/blog/governo-finlandes-apoia-stt-com-105-milhoes-de-euros-para-reestruturacao/))",
     "first_seen": "2026-10-16T16:39:15+00:00",
     "seed": false,
     "link_verified": true,
     "discovered_by": "openai_web_search_agent",
-    "history_action": "NEW"
+    "history_action": "NEW",
+    "alternate_urls": [
+      "https://nacloset.com/blog/governo-finlandes-apoia-stt-com-105-milhoes-de-euros-para-reestruturacao"
+    ],
+    "history_summary_fi": "Lusan ministeriölähde arvioi mahdollisen valtionavun tarjoavan STT:lle vain väliaikaista vakautta. Pitkäaikainen ratkaisu edellyttäisi toiminnan uudistamista sekä omistajien ja asiakkaiden sitoutumista. Ministeriön mukaan omistajille ei ole asetettu määräaikaa eikä hallitus osallistu aktiivisesti neuvotteluihin. Otsikko antaa toteutuneesta tuesta vahvemman kuvan kuin leipäteksti, joka kertoo syyskuun lopulla keskeytetystä tukipaketista. ([noticiasaominuto.com](https://www.noticiasaominuto.com/economia/3067930/governo-finlandes-apoia-stt-com-1-05-milhoes-de-euros-para-reestruturacao))",
+    "last_enriched_at": "2026-10-17T04:24:22+00:00",
+    "history_update_note": "Sama Lusan ministeriöhaastatteluun perustuva tukipakettia ja uudelleenjärjestelyä käsittelevä uutisteksti uudessa julkaisupaikassa."
   },
   {
     "id": "ad0b6fdbe48cb766",
