@@ -113,7 +113,7 @@
     "agency": "Belga",
     "type": "COMMENT",
     "importance": 5,
-    "summary_fi": "Alkuperäispostaus korostaa uutistoimistojen kenttätyötä, jota tekoäly ei voi korvata. Vandendriessche pitää STT:n sulkemisuhkaa varoituksena demokratialle ja liittää riippumattoman tiedonvarmennuksen Suomen turvallisuustilanteeseen. Tämä on nimenomaan sulkemisuhan järkyttävyydestä alkava julkaisu, ei historiatiivistelmässä kuvattu ”Hear, hear!” -alkuinen toinen teksti. ([linkedin.com](https://www.linkedin.com/posts/hans-vandendriessche-79b8862_journalism-media-ai-activity-7512047898424156160-bGhm))",
+    "summary_fi": "Vandendriessche pitää STT:n selviytymistä testinä sille, arvostetaanko alkuperäistä uutishankintaa myös taloudellisesti. Hän käsittelee uutistoimistotilausten vähentämistä, muiden tekstien kierrättämistä oman tiedonvarmennuksen sijaan, paikallismedioiden riippuvuutta yhteisestä uutisaineistosta sekä disinformaation torjuntaa. Hän ilmaisee tukensa STT:n kollegoille ja korostaa alkuperäisen raportoinnin infrastruktuurin säilyttämistä. ([fi.linkedin.com](https://fi.linkedin.com/in/fintmh?utm_source=openai))",
     "first_seen": "2026-10-03T12:00:00+00:00",
     "seed": true,
     "link_verified": true,
@@ -127,10 +127,10 @@
     "direct_stt_reference": true,
     "confidence": 1.0,
     "history_summary_fi": "Belgan päätoimittajan henkilökohtainen kannanotto: tekoäly ei korvaa toimittajien alkuperäistä tiedonhankintaa; riippumaton uutistoimisto on tärkeä myös informaatioturvallisuudelle.",
-    "reason_fi": "Historiatietueen otsikko ja URL vastaavat avattua alkuperäispostausta, mutta sen tiivistelmä ja perustelu kuvaavat eri kannanottoa. Suora lähde korjaa tämän sisältösekaannuksen ja osoittaa, ettei historiassa olevalle tarkalle julkaisuajalle ole tässä näkymässä vahvistusta. Havaintoa ei lasketa uudeksi julkaisuksi. ([linkedin.com](https://www.linkedin.com/posts/hans-vandendriessche-79b8862_journalism-media-ai-activity-7512047898424156160-bGhm))",
-    "last_enriched_at": "2026-10-17T08:50:53+00:00",
+    "reason_fi": "Historiatietue hist-16-9b171160 on korjattu koskemaan sulkemisuhan järkyttävyydestä alkavaa postausta. Nyt löytyvä ”Hear, hear!” -teksti on siitä erillinen julkaisu: sen aloitus, rakenne ja alkuperäisjournalismin korvaamista käsittelevä argumentointi ovat erilaiset. Historiassa se mainitaan aiemman sisältösekaannuksen yhteydessä, mutta sitä ei ole tallennettu omana havaintonaan. Hakutulos erottaa Vandendriesschen kirjoittajaksi ja Hämäläisen reagoijaksi. Pysyvä postausosoite on täydennettävä ennen jatkokäyttöä. ([fi.linkedin.com](https://fi.linkedin.com/in/fintmh?utm_source=openai))",
+    "last_enriched_at": "2026-10-18T09:09:17+00:00",
     "discovered_by": "seed_backfill",
-    "history_update_note": "Sama otsikko ja sama alkuperäinen postausosoite kuin historiassa; päivitys korjaa toiseen tekstiin sekoittuneen sisältökuvauksen ja vahvistamattoman julkaisuajan.",
+    "history_update_note": "Agentti vahvisti/rikasti aiemman havainnon.",
     "alternate_urls": [
       "https://fi.linkedin.com/in/fintmh"
     ]
@@ -1811,7 +1811,7 @@
     "agency": "NTB",
     "type": "COMMENT",
     "importance": 5,
-    "summary_fi": "Flem kuvaa STT:n sulkemisuhkaa koko Euroopan ongelmaksi ja riippumattoman uutistoimistoinfrastruktuurin menettämistä disinformaatiota, hajanaisuutta ja ulkoista riippuvuutta lisääväksi kehitykseksi. Hän erottaa uutistoimiston jatkuvan varmennetun aineistovirran muiden medioiden työstä ja kiittää Maria Guzeninaa asian nostamisesta Brysselin alkuperäisjournalismia käsittelevässä tilaisuudessa. Myös NMC:n, EANAn, AAP:n ja Belgan edustajat saavat kiitoksen tuestaan. ([fi.linkedin.com](https://fi.linkedin.com/in/fintmh?utm_source=openai))",
+    "summary_fi": "Flemin 30.9. julkaistu kolumni käsittelee STT:n sulkemisuhkaa pohjoismaisen lehdistönvapauden, varautumisen ja uutistoimistojen yhteisen uutishankinnan näkökulmasta. Hän kuvaa uutistoimistoja muulle medialle välttämättömäksi perustaksi ja vaatii Norjassa uutismedian toimintaedellytysten, tekijänoikeuksien sekä alustayhtiöiltä saatavien korvausten turvaamista. Kyse on kriisin alussa julkaistusta kolumnista, ei Brysselin tilaisuuden jälkiarviosta. ([m24.no](https://www.m24.no/debatt-finland-ntb/snart-kan-norden-sta-uten-et-finsk-nasjonalt-nyhetsbyra/955723))",
     "first_seen": "2026-09-30T12:00:00+00:00",
     "seed": true,
     "link_verified": true,
@@ -1825,15 +1825,15 @@
     "history_title": "Tina Mari Flem / Journalisten",
     "history_date_note": "30.9.",
     "history_summary_fi": "NTB:n toimitusjohtajan painava puheenvuoro: kansallisen uutistoimiston katoaminen heikentäisi luotettavaa tiedonvälitystä ja yhteiskunnan varautumista.",
-    "last_enriched_at": "2026-10-14T19:23:36+00:00",
+    "last_enriched_at": "2026-10-18T09:09:17+00:00",
     "discovered_by": "seed_backfill",
-    "history_update_note": "Agentti vahvisti/rikasti aiemman havainnon.",
+    "history_update_note": "Sama historiassa oleva Journalisten-osoite ja kolumnin otsikko. Alkuperäislähteiden tarkistus korjaa tietueeseen sekoittuneen myöhemmän LinkedIn-julkaisun sisällön sekä vahvistaa kolumnin julkaisutiedot.",
     "author_role": "NTB:n toimitusjohtaja ja päätoimittaja; tehtävä vahvistettu NTB:n omalta henkilösivulta.",
     "platform": "LinkedIn",
     "match_class": "CONFIRMED",
     "direct_stt_reference": false,
     "confidence": 0.99,
-    "reason_fi": "Kyse on uudesta erillisestä julkaisusta, ei historiassa olevan Flemin kolumnin tai Lehmusjoelle osoitetun lyhyen vastauksen paremmasta lähteestä. Teksti kommentoi nimenomaisesti Brysselin tilaisuutta ja sen osallistujien tukea sekä nimeää STT:n useasti. Indeksoitu näkymä erottaa Flemin kirjoittajaksi ja Hämäläisen reagoijaksi. Pysyvä postausosoite tulee täydentää ennen jatkokäyttöä; muiden osallistujien kannanottoja ei päätellä Flemin kiitoksista. ([fi.linkedin.com](https://fi.linkedin.com/in/fintmh?utm_source=openai))"
+    "reason_fi": "Historiatietueen URL ja otsikko tarkoittavat tätä kolumnia, mutta sen nykyinen tiivistelmä kuvaa myöhempää Brysselin tilaisuuteen liittyvää LinkedIn-kannanottoa. Alkuperäinen Journalisten-sivu vahvistaa kolumnin tekijän, julkaisuajan ja sisällön; Medier24:n rinnakkaisjulkaisu vahvistaa saman tekstin. Päivitys erottaa kaksi eri Flemin julkaisua ja korjaa tunnetun kolumnin metatiedot. ([journalisten.no](https://www.journalisten.no/snart-kan-norden-sta-uten-et-finsk-nasjonalt-nyhetsbyra/684635))"
   },
   {
     "id": "99aeaf81310bbd81",
