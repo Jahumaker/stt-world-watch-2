@@ -1,0 +1,16 @@
+name: Trigger deep now 2026-10-19
+on:
+  push:
+    paths:
+      - '.github/workflows/trigger-deep-2026-10-19.yml'
+permissions:
+  actions: write
+  contents: read
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dispatch deep workflow
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run update-news.yml -R Jahumaker/stt-world-watch-2 -f mode=deep
