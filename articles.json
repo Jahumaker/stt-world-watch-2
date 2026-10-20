@@ -2121,15 +2121,21 @@
     "direct_stt_reference": false,
     "confidence": 0.96,
     "importance": 4,
-    "summary_fi": "Staps suosittelee Tina Mari Flemin STT-kannanottoa ja toivoo jokaisen journalistin ja uutisten käyttäjän pysähtyvän pohtimaan yhteisen faktapohjan merkitystä. Hänen oma viestinsä painottaa, ettei tällainen faktapohja ole itsestäänselvyys. Jaettu Flemin teksti käsittelee nimenomaisesti STT:n journalistisen toiminnan sulkemisuhkaa. ([nl.linkedin.com](https://nl.linkedin.com/in/freekstaps?utm_source=openai))",
-    "reason_fi": "Tämä on eri julkaisu kuin historiassa oleva ca1be71d6bc21607: tunnettu saate suosittelee Hans Vandendriesschen tekstiä, kun nyt löytynyt saate kommentoi Tina Mari Flemin julkaisua. Profiilinäkymä näyttää molemmat erillisinä havaintoina. Oman saatteen yhteys STT:hen on yksiselitteinen välittömästi jaetun tekstin perusteella. Kyse ei ole pelkästä tunnetun postauksen paremmasta URL:sta. ([nl.linkedin.com](https://nl.linkedin.com/in/freekstaps?utm_source=openai))",
+    "summary_fi": "Staps suosittelee norjalaiskollegansa Tina Mari Flemin tekstiä ja kehottaa journalisteja sekä uutisten käyttäjiä pohtimaan yhteisen faktapohjan merkitystä. Välittömästi jaettu Flemin teksti nimeää STT:n ja sen journalistisen toiminnan sulkemisuhan. Kyse on tunnetusta saatteesta, ei uudesta kannanotosta. ([nl.linkedin.com](https://nl.linkedin.com/posts/freekstaps_snart-kan-norden-st%C3%A5-uten-et-finsk-nasjonalt-activity-7511052859925508117-j01T))",
+    "reason_fi": "Avattu suora postausosoite vahvistaa Stapsin oman saatteen ja jaetun Flemin tekstin samassa julkaisussa. Tämä parantaa historiassa profiiliosoitteella tallennetun havainnon lähdennettävyyttä. ([nl.linkedin.com](https://nl.linkedin.com/posts/freekstaps_snart-kan-norden-st%C3%A5-uten-et-finsk-nasjonalt-activity-7511052859925508117-j01T))",
     "first_seen": "2026-10-11T12:18:47+00:00",
     "seed": false,
     "link_verified": true,
     "discovered_by": "openai_web_search_agent",
     "history_action": "NEW",
     "history_published_at": "2026-10-11T12:18:47+00:00",
-    "publication_time_status": "unknown"
+    "publication_time_status": "unknown",
+    "alternate_urls": [
+      "https://nl.linkedin.com/posts/freekstaps_snart-kan-norden-st%C3%A5-uten-et-finsk-nasjonalt-activity-7511052859925508117-j01T"
+    ],
+    "history_summary_fi": "Staps suosittelee Tina Mari Flemin STT-kannanottoa ja toivoo jokaisen journalistin ja uutisten käyttäjän pysähtyvän pohtimaan yhteisen faktapohjan merkitystä. Hänen oma viestinsä painottaa, ettei tällainen faktapohja ole itsestäänselvyys. Jaettu Flemin teksti käsittelee nimenomaisesti STT:n journalistisen toiminnan sulkemisuhkaa. ([nl.linkedin.com](https://nl.linkedin.com/in/freekstaps?utm_source=openai))",
+    "last_enriched_at": "2026-10-20T00:20:00+00:00",
+    "history_update_note": "Oma saate ”Mijn Noorse collega vat het zo goed samen…” ja välittömästi jaettu Tina Mari Flemin teksti vastaavat tunnettua havaintoa. Vain lähdeosoite tarkentuu profiilista alkuperäiseksi postaukseksi."
   },
   {
     "id": "cc4692cbcf84cf98",
