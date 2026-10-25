@@ -11,7 +11,7 @@ from difflib import SequenceMatcher
 from pathlib import Path
 from urllib.parse import urlparse, urlunparse, parse_qsl, urlencode
 
-from openai import OpenAI
+from openai import OpenAI, RateLimitError
 
 ROOT = Path(__file__).resolve().parent
 ARTICLES_PATH = ROOT / "articles.json"
@@ -931,23 +931,56 @@ def main():
     client = OpenAI()
     print(f"Running semantic STT World Watch: mode={args.mode}, model={model}")
 
-    response = client.responses.create(
-        model=model,
-        reasoning={"effort": effort},
-        tools=[{"type": "web_search", "search_context_size": context_size}],
-        tool_choice="auto",
-        include=["web_search_call.action.sources"],
-        instructions=SYSTEM,
-        input=build_prompt(args.mode, articles),
-        text={
-            "format": {
-                "type": "json_schema",
-                "name": "stt_world_watch_results",
-                "strict": True,
-                "schema": SCHEMA,
-            }
-        },
-    )
+    try:
+        response = client.responses.create(
+            model=model,
+            reasoning={"effort": effort},
+            tools=[{"type": "web_search", "search_context_size": context_size}],
+            tool_choice="auto",
+            include=["web_search_call.action.sources"],
+            instructions=SYSTEM,
+            input=build_prompt(args.mode, articles),
+            text={
+                "format": {
+                    "type": "json_schema",
+                    "name": "stt_world_watch_results",
+                    "strict": True,
+                    "schema": SCHEMA,
+                }
+            },
+        )
+    except RateLimitError as e:
+        message = str(e)
+        quota_exhausted = (
+            "credit_balance_exhausted" in message
+            or "insufficient_quota" in message
+            or "no credits remaining" in message.lower()
+        )
+        if not quota_exhausted:
+            raise
+
+        status = load_json(STATUS_PATH, {})
+        already_paused = (
+            status.get("monitoring_paused") is True
+            and status.get("error_code") == "credit_balance_exhausted"
+        )
+        if not already_paused:
+            status.update({
+                "last_attempt": now_iso(),
+                "error": "OpenAI API credits exhausted; monitoring paused until API credits are available again.",
+                "error_code": "credit_balance_exhausted",
+                "monitoring_paused": True,
+                "agent_mode": args.mode,
+            })
+            STATUS_PATH.write_text(
+                json.dumps(status, ensure_ascii=False, indent=2) + "\n",
+                encoding="utf-8"
+            )
+        print(
+            "OpenAI API credits exhausted. Monitoring is paused, "
+            "but the workflow exits successfully to avoid repeated failure notifications."
+        )
+        return
 
     try:
         result = json.loads(response.output_text)
@@ -1109,6 +1142,9 @@ def main():
         "uncertain_publication_dates_fixed": uncertain_dates_fixed,
         "source_count": len(sources),
         "error": None,
+        "error_code": None,
+        "monitoring_paused": False,
+        "last_attempt": now_iso(),
         "agent_mode": args.mode,
         "agent_summary_fi": result.get("run_summary_fi"),
         "agent_search_notes_fi": result.get("search_notes_fi"),
