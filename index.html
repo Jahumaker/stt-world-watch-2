@@ -208,14 +208,16 @@ function updateHeader(){
   $('#mPublished24').textContent=published24;
   $('#mTotal').textContent=a.length;
   $('#mCountries').textContent=countries.size;
-  const last=state.status.last_success||state.status.last_data_update, healthy=last&&hours(last)<8;
+  const last=state.status.last_success||state.status.last_data_update;
+  const paused=state.status.monitoring_paused===true;
+  const healthy=!paused&&last&&hours(last)<8;
   $('#watchDot').className='dot '+(healthy?'live':'warn');
-  $('#watchLabel').textContent=healthy?'Automaattiseuranta päällä':'Seurannan tila tarkistettava';
+  $('#watchLabel').textContent=paused?'Automaattiseuranta tauolla – API-saldo loppu':(healthy?'Automaattiseuranta päällä':'Seurannan tila tarkistettava');
   const base=Number(state.status.baseline_coverage||baselineCoverage(a));
   const repaired=Number(state.status.uncertain_publication_dates_fixed||0);
   $('#watchTime').textContent='Viimeisin agenttiajo: '+(last?fmt(last):'–')+' · lähtöaineisto '+base+'/43'+(repaired?` · päiväyskorjauksia ${repaired}`:'');
-  $('#briefTitle').textContent=lastRun?`${lastRun} aidosti uutta havaintoa viime agenttiajossa`:'Ei uusia havaintoja viime agenttiajossa';
-  $('#briefText').textContent=state.status.agent_summary_fi||`Seurannassa on ${a.length} havaintoa ${countries.size} maasta.`;
+  $('#briefTitle').textContent=paused?'Seuranta tauolla – OpenAI API -saldo on loppu':(lastRun?`${lastRun} aidosti uutta havaintoa viime agenttiajossa`:'Ei uusia havaintoja viime agenttiajossa');
+  $('#briefText').textContent=paused?'Uusia hakuja ei tehdä ennen kuin API-tilillä on jälleen saldoa. Aiemmat havainnot ovat edelleen käytettävissä.':(state.status.agent_summary_fi||`Seurannassa on ${a.length} havaintoa ${countries.size} maasta.`);
 }
 function renderList(title,items,note=''){
   return `<div class="section-head"><h2>${esc(title)}</h2><span>${esc(note||items.length+' havaintoa')}</span></div><div class="list">${items.map(row).join('')||'<div class="empty">Ei havaintoja tällä rajauksella.</div>'}</div>`;
